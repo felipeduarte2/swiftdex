@@ -18,7 +18,6 @@ class _TareaPageState extends State<TareaPage> {
 
   final List<String> _taskList = [];
   List<TextEditingController> textControllers = [];
-
   final List<String> _taskNotas = [];
   List<TextEditingController> notasControllers = [];
 
@@ -35,8 +34,12 @@ class _TareaPageState extends State<TareaPage> {
   String boton="Guardar";
   int opcionColor=1;
   late Actividad actividad0;
-  late Detalle  detalle0;
+  // late Detalle  detalle0;
+  bool bandera2 = true;
+  bool bandera3 = true;
   late  Nota nota0;
+  List<Detalle> detalles = [];
+  List<Nota> notas = [];
 
   @override
   void initState() {
@@ -108,15 +111,33 @@ class _TareaPageState extends State<TareaPage> {
                               }
                             }else{
                               actividad0.titulo=_tituloController.text;
-                              // actividad0.descripcion=_descripcionController.text;
                               actividad0.nivelDeImportancia=nivelDeImportancia;
                               actividad0.fecha=_fecha;
                               actividad0.hora=_hora;
-                              detalle0.detalle= "";//_detallesController.text;
-                              nota0.nota="";//_notasController.text;
+                              actividad0.color= opcionColor;
                               await ActividadesCRUD().updateActividad(actividad0);
-                              await DetallesCRUD().updateDetalle(detalle0);
-                              await NotasCRUD().updateNota(nota0);
+                              // detalle0.detalle= "";//_detallesController.text;
+                              nota0.nota="";//_notasController.text;
+                              DetallesCRUD().deleteDetalle(id);
+                              for (TextEditingController controller in textControllers) {
+                                Detalle detalle =  Detalle(
+                                  detalle: controller.text,
+                                  realizado: "no",
+                                  idActividad: id,
+                                );
+                                if(controller.text.isNotEmpty){await DetallesCRUD().insertDetalle(detalle);}
+                                // await DetallesCRUD().insertDetalle(detalle);
+                              }
+                              NotasCRUD().deleteNota(id);
+                              for (TextEditingController controller in notasControllers) {
+                                Nota  nota = Nota(
+                                  nota: controller.text,
+                                  idActividad: id,
+                                );
+                                if(controller.text.isNotEmpty){await NotasCRUD().insertNota(nota);}
+                              }
+                              // await DetallesCRUD().updateDetalle(detalle0);
+                              // await NotasCRUD().updateNota(nota0);
                             }
                             // ignore: use_build_context_synchronously
                             Navigator.pop(context);
@@ -170,12 +191,16 @@ class _TareaPageState extends State<TareaPage> {
     final name = ModalRoute.of(context)?.settings.arguments;
     id = int.parse(name.toString());
     Actividad? actividad = await ActividadesCRUD().getActividadById(id);
-    Detalle? detalle = await  DetallesCRUD().getDetalleById(id);
+    List<Detalle> detalle2 = await DetallesCRUD().getAllDetallesById(id);
+    List<Nota> nota2 = await  NotasCRUD().getAllNotasById(id);
+    // Detalle? detalle = await  DetallesCRUD().getDetalleById(id);
     Nota? nota = await NotasCRUD().getNotaById(id);
     if(mounted){
       setState(() {
       actividad0 = actividad!;
-      detalle0 =detalle!;
+      detalles =detalle2;
+      notas=nota2;
+      // detalle0 =detalle!;
       nota0 = nota!;
       _tituloController.text=actividad.titulo;
       // _descripcionController.text=actividad.descripcion;
@@ -193,6 +218,7 @@ class _TareaPageState extends State<TareaPage> {
   }
 
   _subtareas(BuildContext context) {
+    if(id==0){
     for (int i = 0; i < _taskList.length + 1; i++) {
       TextEditingController textController = TextEditingController();
       textControllers.add(textController);
@@ -247,10 +273,75 @@ class _TareaPageState extends State<TareaPage> {
         ],
       ),
     );
+    }else{
+      if(bandera2){
+      for (int i = 0; i < detalles.length +1; i++){
+        TextEditingController textController = TextEditingController();
+        if(i != detalles.length){_taskList.add(''); textController.text=detalles[i].detalle;}
+        textControllers.add(textController);
+      }
+      textControllers.removeAt(0);
+      TextEditingController textController = TextEditingController();
+      textControllers.add(textController);
+      }
+    return Container(
+      decoration: const BoxDecoration(
+                          // color: Color(0xff63d3ff),
+                          borderRadius:  BorderRadius.all(Radius.circular(10)), 
+                          border: Border(
+                            bottom: BorderSide(color: Colors.blue),
+                            right: BorderSide(color: Colors.blue),
+                            left: BorderSide(color: Colors.blue),
+                            top: BorderSide(color: Colors.blue),
+                          ),
+                        ),
+      child: Column(      
+        children: [
+          const Text('Subtareas',style: TextStyle(fontSize: 18) ),
+          for (int i = 0; i < _taskList.length+ 1; i++) ...[
+            ListTile(
+              title: Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: textControllers[i],
+                      decoration: InputDecoration(
+                        labelText: 'Subtarea ${i + 1}',
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    // ignore: prefer_const_constructors
+                    icon: i == _taskList.length ? Icon(Icons.add) : Icon(Icons.close_outlined),
+                    onPressed: () {
+                      if(i == _taskList.length){
+                        setState(() {
+                          bandera2=false;bandera3=false;
+                          _taskList.add('');
+                          textControllers.add(TextEditingController());
+                        });
+                      }else{
+                        setState(() {
+                          bandera2=false;bandera3=false;
+                          _taskList.remove(_taskList[i]);
+                          textControllers.removeAt(i);
+                        });
+                      }                  
+                    },
+                  )
+                ],
+              ),
+            ),
+          ],  
+        ],
+      ),
+    );
+    }
   }
 
   _notas(BuildContext context){
-        for (int i = 0; i < _taskNotas.length + 1; i++) {
+    if(id==0){
+    for (int i = 0; i < _taskNotas.length + 1; i++) {
       TextEditingController notasController = TextEditingController();
       notasControllers.add(notasController);
     }
@@ -304,6 +395,70 @@ class _TareaPageState extends State<TareaPage> {
         ],
       ),
     );
+    }else{
+      if(bandera3){
+      for (int i = 0; i < notas.length +1; i++){
+        TextEditingController notasController = TextEditingController();
+        if(i != notas.length){_taskNotas.add(''); notasController.text=notas[i].nota;}
+        notasControllers.add(notasController);
+      }
+      notasControllers.removeAt(0);
+      TextEditingController notasController = TextEditingController();
+      notasControllers.add(notasController);
+      }
+      return Container(
+      decoration: const BoxDecoration(
+                          // color: Color(0xff63d3ff),
+                          borderRadius:  BorderRadius.all(Radius.circular(10)), 
+                          border: Border(
+                            bottom: BorderSide(color: Colors.blue),
+                            right: BorderSide(color: Colors.blue),
+                            left: BorderSide(color: Colors.blue),
+                            top: BorderSide(color: Colors.blue),
+                          ),
+                        ),
+      child: Column(      
+        children: [
+          const Text('Notas',style: TextStyle(fontSize: 18) ),
+          for (int i = 0; i < _taskNotas.length+ 1; i++) ...[
+            ListTile(
+              title: Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: notasControllers[i],
+                      decoration: InputDecoration(
+                        labelText: 'Nota ${i + 1}',
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    // ignore: prefer_const_constructors
+                    icon: i == _taskNotas.length ? Icon(Icons.add) : Icon(Icons.close_outlined),
+                    onPressed: () {
+                      if(i == _taskNotas.length){
+                        setState(() {
+                          bandera2=false;bandera3=false;
+                          _taskNotas.add('');
+                          notasControllers.add(TextEditingController());
+                        });
+                      }else{
+                        setState(() {
+                          bandera2=false;bandera3=false;
+                          _taskNotas.remove(_taskNotas[i]);
+                          notasControllers.removeAt(i);
+                        });
+                      }
+                    },
+                  )
+                ],
+              ),
+            ),
+          ],  
+        ],
+      ),
+    );
+    }
   }
 
   _showActividad(BuildContext context) {
@@ -407,6 +562,7 @@ class _TareaPageState extends State<TareaPage> {
                           ], 
                           onChanged: (String? value) {
                             setState(() {
+                              bandera2=false;bandera3=false;
                               nivelDeImportancia = value!;
                             });
                           },
@@ -430,6 +586,7 @@ class _TareaPageState extends State<TareaPage> {
                                 );
                                 if (date != null) {
                                   setState(() {
+                                    bandera2=false;bandera3=false;
                                     _selectedDate = date;
                                     // _fecha=_selectedDate.toString();
                                     // _fecha=_fecha.substring(0,10);
@@ -452,6 +609,7 @@ class _TareaPageState extends State<TareaPage> {
                                 );
                                 if (time != null) {
                                   setState(() {
+                                    bandera2=false;bandera3=false;
                                     _selectedTime = time;
                                     // _hora=_selectedTime.toString();
                                     // _hora=_hora.substring(10,15);
@@ -499,6 +657,7 @@ class _TareaPageState extends State<TareaPage> {
                     GestureDetector(
                       onTap: (){
                         setState(() {
+                          bandera2=false;bandera3=false;
                           opcionColor = 1;
                         });
                       },
@@ -518,6 +677,7 @@ class _TareaPageState extends State<TareaPage> {
                     GestureDetector(
                       onTap: (){
                         setState(() {
+                          bandera2=false;bandera3=false;
                           opcionColor = 2;
                         });
                       },
@@ -537,6 +697,7 @@ class _TareaPageState extends State<TareaPage> {
                     GestureDetector(
                       onTap: (){
                         setState(() {
+                          bandera2=false;bandera3=false;
                           opcionColor = 3;
                         });
                       },
@@ -556,6 +717,7 @@ class _TareaPageState extends State<TareaPage> {
                     GestureDetector(
                       onTap: (){
                         setState(() {
+                          bandera2=false;bandera3=false;
                           opcionColor = 4;
                         });
                       },
@@ -575,6 +737,7 @@ class _TareaPageState extends State<TareaPage> {
                     GestureDetector(
                       onTap: (){
                         setState(() {
+                          bandera2=false;bandera3=false;
                           opcionColor = 5;
                         });
                       },
@@ -594,6 +757,7 @@ class _TareaPageState extends State<TareaPage> {
                     GestureDetector(
                       onTap: (){
                         setState(() {
+                          bandera2=false;bandera3=false;
                           opcionColor = 6;
                         });
                       },

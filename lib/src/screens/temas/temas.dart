@@ -7,7 +7,7 @@ class Temas {
     brightness: Brightness.light,
     scaffoldBackgroundColor: Colors.white,
     appBarTheme: const AppBarTheme(
-      titleTextStyle: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold,fontSize: 20),
+      titleTextStyle: TextStyle(color: Colors.blue,fontSize: 20),
       iconTheme: IconThemeData(color: Colors.blue),
       backgroundColor: Colors.white,
       elevation: 5,
@@ -63,7 +63,7 @@ class Temas {
     appBarTheme: const AppBarTheme(
       backgroundColor: Color(0xff13122a),
       elevation: 0,
-      titleTextStyle: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold,fontSize: 20),
+      titleTextStyle: TextStyle(color: Colors.blue,fontSize: 20),
       iconTheme: IconThemeData(color: Colors.blue),
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
