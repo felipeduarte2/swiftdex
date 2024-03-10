@@ -83,6 +83,7 @@ class _ViajePageState extends State<ViajePage> {
                               actividad0.nivelDeImportancia=nivelDeImportancia;
                               actividad0.fecha= "2000-00-00";
                               actividad0.hora=_hora;
+                              actividad0.color=opcionColor;
                               await ActividadesCRUD().updateActividad(actividad0);
                             }
                             // ignore: use_build_context_synchronously

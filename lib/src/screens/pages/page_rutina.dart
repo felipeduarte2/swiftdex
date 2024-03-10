@@ -57,9 +57,13 @@ class _RutinaPageState extends State<RutinaPage> {
   String boton="Guardar";
   int opcionColor=1;
   late Actividad actividad0;
-  late Nota nota0;
-  late Detalle detalle0;
+  // late Nota nota0;
+  // late Detalle detalle0;
   late Dia dia0;
+  List<Detalle> detalles = [];
+  List<Nota> notas = [];
+  bool bandera2 = true;
+  bool bandera3 = true;
 
   @override
   void initState() {
@@ -151,7 +155,8 @@ class _RutinaPageState extends State<RutinaPage> {
                               actividad0.nivelDeImportancia=nivelDeImportancia;
                               actividad0.horario1=_hora1;
                               actividad0.horario2=_hora2;
-                              detalle0.detalle= "";//_descripcionController.text;
+                              actividad0.color=opcionColor;
+                              // detalle0.detalle= "";//_descripcionController.text;
                               dia0.lunes=lunes;
                               dia0.martes=martes;
                               dia0.miercoles=miercoles;
@@ -159,11 +164,28 @@ class _RutinaPageState extends State<RutinaPage> {
                               dia0.viernes=viernes;
                               dia0.sabado=sabado;
                               dia0.domingo=domingo;
-                              nota0.nota= "";//_notasController.text;
+                              // nota0.nota= "";//_notasController.text;
                               await ActividadesCRUD().updateActividad(actividad0);
-                              await DetallesCRUD().updateDetalle(detalle0);
                               await DiasCRUD().updateDia(dia0);
-                              await NotasCRUD().updateNota(nota0);
+                              DetallesCRUD().deleteDetalle(id);
+                              for (TextEditingController controller in textControllers) {
+                                Detalle detalle =  Detalle(
+                                  detalle: controller.text,
+                                  realizado: "no",
+                                  idActividad: id,
+                                );
+                                if(controller.text.isNotEmpty){await DetallesCRUD().insertDetalle(detalle);}
+                                // await DetallesCRUD().insertDetalle(detalle);
+                              }
+                              NotasCRUD().deleteNota(id);
+                              for (TextEditingController controller in notasControllers) {
+                                Nota  nota = Nota(
+                                  nota: controller.text,
+                                  idActividad: id,
+                                );
+                                if(controller.text.isNotEmpty){await NotasCRUD().insertNota(nota);}
+                              }
+                              // await NotasCRUD().updateNota(nota0);
                             }
                             // ignore: use_build_context_synchronously
                             Navigator.pop(context);
@@ -185,7 +207,7 @@ class _RutinaPageState extends State<RutinaPage> {
               bool available = await speechRecognizer.initialize();
               if(available){
                 setState(() {
-                  isListening = true;
+                  isListening = true;bandera2=false;bandera3=false;
                   speechRecognizer.listen(
                     onResult: (result) {
                       // _text = result.recognizedWords;
@@ -230,15 +252,20 @@ class _RutinaPageState extends State<RutinaPage> {
     id = int.parse(name.toString());
 
     Actividad? actividad = await ActividadesCRUD().getActividadById(id);
-    Detalle? detalle  = await DetallesCRUD().getDetalleById(id);
+    List<Detalle> detalle2 = await DetallesCRUD().getAllDetallesById(id);
+    List<Nota> nota2 = await  NotasCRUD().getAllNotasById(id);
+
+    // Detalle? detalle  = await DetallesCRUD().getDetalleById(id);
     Dia? dia = await DiasCRUD().getDiaById(id);
-    Nota? nota = await NotasCRUD().getNotaById(id);
+    // Nota? nota = await NotasCRUD().getNotaById(id);
     if(mounted){
       setState(() {
         actividad0 = actividad!;
-        detalle0 = detalle!;
+        // detalle0 = detalle!;
         dia0  = dia!;
-        nota0 = nota!;
+        // nota0 = nota!;
+        detalles =detalle2;
+        notas=nota2;
         _tituloController.text=actividad.titulo;
         // _descripcionController.text=actividad.descripcion;
         nivelDeImportancia=actividad.nivelDeImportancia;
@@ -262,6 +289,7 @@ class _RutinaPageState extends State<RutinaPage> {
   }
 
   _subtareas(BuildContext context) {
+    if(id==0){
     for (int i = 0; i < _taskList.length + 1; i++) {
       TextEditingController textController = TextEditingController();
       textControllers.add(textController);
@@ -315,10 +343,75 @@ class _RutinaPageState extends State<RutinaPage> {
           ],  
         ],
       ),
+    );}
+    else{
+      if(bandera2){
+      for (int i = 0; i < detalles.length +1; i++){
+        TextEditingController textController = TextEditingController();
+        if(i != detalles.length){_taskList.add(''); textController.text=detalles[i].detalle;}
+        textControllers.add(textController);
+      }
+      textControllers.removeAt(0);
+      TextEditingController textController = TextEditingController();
+      textControllers.add(textController);
+      }
+    return Container(
+      decoration: const BoxDecoration(
+                          // color: Color(0xff63d3ff),
+                          borderRadius:  BorderRadius.all(Radius.circular(10)), 
+                          border: Border(
+                            bottom: BorderSide(color: Colors.blue),
+                            right: BorderSide(color: Colors.blue),
+                            left: BorderSide(color: Colors.blue),
+                            top: BorderSide(color: Colors.blue),
+                          ),
+                        ),
+      child: Column(      
+        children: [
+          const Text('Subtareas',style: TextStyle(fontSize: 18) ),
+          for (int i = 0; i < _taskList.length+ 1; i++) ...[
+            ListTile(
+              title: Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: textControllers[i],
+                      decoration: InputDecoration(
+                        labelText: 'Subtarea ${i + 1}',
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    // ignore: prefer_const_constructors
+                    icon: i == _taskList.length ? Icon(Icons.add) : Icon(Icons.close_outlined),
+                    onPressed: () {
+                      if(i == _taskList.length){
+                        setState(() {
+                          bandera2=false;bandera3=false;
+                          _taskList.add('');
+                          textControllers.add(TextEditingController());
+                        });
+                      }else{
+                        setState(() {
+                          bandera2=false;bandera3=false;
+                          _taskList.remove(_taskList[i]);
+                          textControllers.removeAt(i);
+                        });
+                      }                  
+                    },
+                  )
+                ],
+              ),
+            ),
+          ],  
+        ],
+      ),
     );
+    }
   }
 
   _notas(BuildContext context){
+    if(id==0){
         for (int i = 0; i < _taskNotas.length + 1; i++) {
       TextEditingController notasController = TextEditingController();
       notasControllers.add(notasController);
@@ -372,7 +465,71 @@ class _RutinaPageState extends State<RutinaPage> {
           ],  
         ],
       ),
+    );}
+    else{
+      if(bandera3){
+      for (int i = 0; i < notas.length +1; i++){
+        TextEditingController notasController = TextEditingController();
+        if(i != notas.length){_taskNotas.add(''); notasController.text=notas[i].nota;}
+        notasControllers.add(notasController);
+      }
+      notasControllers.removeAt(0);
+      TextEditingController notasController = TextEditingController();
+      notasControllers.add(notasController);
+      }
+      return Container(
+      decoration: const BoxDecoration(
+                          // color: Color(0xff63d3ff),
+                          borderRadius:  BorderRadius.all(Radius.circular(10)), 
+                          border: Border(
+                            bottom: BorderSide(color: Colors.blue),
+                            right: BorderSide(color: Colors.blue),
+                            left: BorderSide(color: Colors.blue),
+                            top: BorderSide(color: Colors.blue),
+                          ),
+                        ),
+      child: Column(      
+        children: [
+          const Text('Notas',style: TextStyle(fontSize: 18) ),
+          for (int i = 0; i < _taskNotas.length+ 1; i++) ...[
+            ListTile(
+              title: Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: notasControllers[i],
+                      decoration: InputDecoration(
+                        labelText: 'Nota ${i + 1}',
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    // ignore: prefer_const_constructors
+                    icon: i == _taskNotas.length ? Icon(Icons.add) : Icon(Icons.close_outlined),
+                    onPressed: () {
+                      if(i == _taskNotas.length){
+                        setState(() {
+                          bandera2=false;bandera3=false;
+                          _taskNotas.add('');
+                          notasControllers.add(TextEditingController());
+                        });
+                      }else{
+                        setState(() {
+                          bandera2=false;bandera3=false;
+                          _taskNotas.remove(_taskNotas[i]);
+                          notasControllers.removeAt(i);
+                        });
+                      }
+                    },
+                  )
+                ],
+              ),
+            ),
+          ],  
+        ],
+      ),
     );
+    }
   }
 
 
@@ -473,7 +630,7 @@ class _RutinaPageState extends State<RutinaPage> {
                           ], 
                           onChanged: (String? value) {
                             setState(() {
-                              nivelDeImportancia = value!;
+                              nivelDeImportancia = value!;bandera2=false;bandera3=false;
                             });
                           },
                         ),
@@ -493,7 +650,7 @@ class _RutinaPageState extends State<RutinaPage> {
                                 );
                                 if (time != null) {
                                   setState(() {
-                                    _selectedTime1 = time;
+                                    _selectedTime1 = time;bandera2=false;bandera3=false;
                                     _hora1=_selectedTime1.toString();
                                     _hora1=_hora1.substring(10,15);
                                     //_hora='${_selectedTime.hour}:${_selectedTime.minute}';
@@ -513,7 +670,7 @@ class _RutinaPageState extends State<RutinaPage> {
                                 );
                                 if (time != null) {
                                   setState(() {
-                                    _selectedTime2 = time;
+                                    _selectedTime2 = time;bandera2=false;bandera3=false;
                                     _hora2=_selectedTime2.toString();
                                     _hora2=_hora2.substring(10,15);
                                     //_hora='${_selectedTime.hour}:${_selectedTime.minute}';
@@ -537,7 +694,7 @@ class _RutinaPageState extends State<RutinaPage> {
                                     Checkbox(
                                       value: lu, 
                                       autofocus: true,
-                                      onChanged: (value) {setState(() {lu  = value!;if(value == true){lunes="si";}else{lunes= "no";}});},
+                                      onChanged: (value) {setState(() {lu  = value!;if(value == true){lunes="si";}else{lunes= "no";bandera2=false;bandera3=false;}});},
                                     ),
                                     const Text("Lunes      "),
                                   ],
@@ -546,7 +703,7 @@ class _RutinaPageState extends State<RutinaPage> {
                                   children: [
                                     Checkbox(
                                       value: mi, 
-                                      onChanged: (value) {setState(() {mi  = value!;if(value == true){miercoles="si";}else{miercoles= "no";}});},
+                                      onChanged: (value) {setState(() {mi  = value!;if(value == true){miercoles="si";}else{miercoles= "no";bandera2=false;bandera3=false;}});},
                                     ),
                                     const Text("Miércoles"),
                                   ],
@@ -555,7 +712,7 @@ class _RutinaPageState extends State<RutinaPage> {
                                   children: [
                                     Checkbox(
                                       value: vi, 
-                                      onChanged: (value) {setState(() {vi  = value!;if(value == true){viernes="si";}else{viernes= "no";}});},
+                                      onChanged: (value) {setState(() {vi  = value!;if(value == true){viernes="si";}else{viernes= "no";bandera2=false;bandera3=false;}});},
                                     ),
                                     const Text("Viernes   "),
                                   ],
@@ -564,7 +721,7 @@ class _RutinaPageState extends State<RutinaPage> {
                                   children: [
                                      Checkbox(
                                       value: dom, 
-                                      onChanged: (value) {setState(() {dom = value!;if(value == true){domingo="si";}else{domingo= "no";}});},
+                                      onChanged: (value) {setState(() {dom = value!;if(value == true){domingo="si";}else{domingo= "no";bandera2=false;bandera3=false;}});},
                                     ),
                                     const Text("Domingo"),
                                   ],
@@ -580,7 +737,7 @@ class _RutinaPageState extends State<RutinaPage> {
                                     //
                                     Checkbox(
                                       value: ma, 
-                                      onChanged: (value) {setState(() {ma  = value!;if(value == true){martes="si";}else{martes= "no";}});},
+                                      onChanged: (value) {setState(() {ma  = value!;if(value == true){martes="si";}else{martes= "no";bandera2=false;bandera3=false;}});},
                                     ),
                                     const Text("Martes  "),
                                   ],
@@ -589,7 +746,7 @@ class _RutinaPageState extends State<RutinaPage> {
                                   children: [
                                     Checkbox(
                                       value: ju, 
-                                      onChanged: (value) {setState(() {ju  = value!; if(value == true){jueves="si";}else{jueves= "no";}});},
+                                      onChanged: (value) {setState(() {ju  = value!; if(value == true){jueves="si";}else{jueves= "no";bandera2=false;bandera3=false;}});},
                                     ),
                                     const Text("Jueves "),
                                   ],
@@ -598,7 +755,7 @@ class _RutinaPageState extends State<RutinaPage> {
                                   children: [
                                     Checkbox(
                                       value: sa, 
-                                      onChanged: (value) {setState(() {sa  = value!;if(value == true){sabado="si";}else{sabado= "no";}});},
+                                      onChanged: (value) {setState(() {sa  = value!;if(value == true){sabado="si";}else{sabado= "no";bandera2=false;bandera3=false;}});},
                                     ),
                                     const Text("Sabado"),
                                   ],
@@ -642,7 +799,7 @@ class _RutinaPageState extends State<RutinaPage> {
                     GestureDetector(
                       onTap: (){
                         setState(() {
-                          opcionColor = 1;
+                          opcionColor = 1;bandera2=false;bandera3=false;
                         });
                       },
                       child: Container(
@@ -661,7 +818,7 @@ class _RutinaPageState extends State<RutinaPage> {
                     GestureDetector(
                       onTap: (){
                         setState(() {
-                          opcionColor = 2;
+                          opcionColor = 2;bandera2=false;bandera3=false;
                         });
                       },
                       child: Container(
@@ -680,7 +837,7 @@ class _RutinaPageState extends State<RutinaPage> {
                     GestureDetector(
                       onTap: (){
                         setState(() {
-                          opcionColor = 3;
+                          opcionColor = 3;bandera2=false;bandera3=false;
                         });
                       },
                       child: Container(
@@ -699,7 +856,7 @@ class _RutinaPageState extends State<RutinaPage> {
                     GestureDetector(
                       onTap: (){
                         setState(() {
-                          opcionColor = 4;
+                          opcionColor = 4;bandera2=false;bandera3=false;
                         });
                       },
                       child: Container(
@@ -718,7 +875,7 @@ class _RutinaPageState extends State<RutinaPage> {
                     GestureDetector(
                       onTap: (){
                         setState(() {
-                          opcionColor = 5;
+                          opcionColor = 5;bandera2=false;bandera3=false;
                         });
                       },
                       child: Container(
@@ -737,7 +894,7 @@ class _RutinaPageState extends State<RutinaPage> {
                     GestureDetector(
                       onTap: (){
                         setState(() {
-                          opcionColor = 6;
+                          opcionColor = 6;bandera2=false;bandera3=false;
                         });
                       },
                       child: Container(

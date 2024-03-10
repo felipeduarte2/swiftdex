@@ -42,8 +42,10 @@ class _EventoPageState extends State<EventoPage> {
   late Actividad actividad0;
   // late Contacto contacto0;
   // late Preparativo preparativo0;
-  late Nota nota0;
-  
+  List<Nota> notas = [];
+  // late Nota nota0;
+  bool bandera2 = true;
+  bool bandera3 = true;
 
   @override
   void initState() {
@@ -109,13 +111,22 @@ class _EventoPageState extends State<EventoPage> {
                               actividad0.fecha=_fecha;
                               actividad0.hora=_hora;
                               actividad0.lugar=_lugarController.text;
+                              actividad0.color=opcionColor;
                               // contacto0.contacto="";//_contactoController.text;
                               // preparativo0.preparativo="";//_preparativoController.text;
-                              nota0.nota="";//_notasController.text;
+                              // nota0.nota="";//_notasController.text;
                               await ActividadesCRUD().updateActividad(actividad0);
                               // await ContactosCRUD().updateContacto(contacto0);
                               // await PreparativosCRUD().updatePreparativo(preparativo0);
-                              await NotasCRUD().updateNota(nota0);
+                              NotasCRUD().deleteNota(id);
+                              for (TextEditingController controller in notasControllers) {
+                                Nota  nota = Nota(
+                                  nota: controller.text,
+                                  idActividad: id,
+                                );
+                                if(controller.text.isNotEmpty){await NotasCRUD().insertNota(nota);}
+                              }
+                              // await NotasCRUD().updateNota(nota0);
                             }
                             // ignore: use_build_context_synchronously
                             Navigator.pop(context);
@@ -137,7 +148,7 @@ class _EventoPageState extends State<EventoPage> {
               bool available = await speechRecognizer.initialize();
               if(available){
                 setState(() {
-                  isListening = true;
+                  isListening = true;bandera2=false;bandera3=false;
                   speechRecognizer.listen(
                     onResult: (result) {
                       // _text = result.recognizedWords;
@@ -183,13 +194,15 @@ class _EventoPageState extends State<EventoPage> {
     Actividad? actividad = await ActividadesCRUD().getActividadById(id);
     // Contacto? contacto = await ContactosCRUD().getContactoById(id);
     // Preparativo? preparativo = await PreparativosCRUD().getPreparativoById(id);
-    Nota? nota = await NotasCRUD().getNotaById(id);
+    List<Nota> nota2 = await  NotasCRUD().getAllNotasById(id);
+    // Nota? nota = await NotasCRUD().getNotaById(id);
     if(mounted){
       setState(() {
       actividad0 = actividad!;
       // contacto0 = contacto!;
       // preparativo0 = preparativo!;
-      nota0 = nota!;
+      notas=nota2;
+      // nota0 = nota!;
       _tituloController.text=actividad.titulo;
       // _descripcionController.text=actividad.descripcion;
       nivelDeImportancia=actividad.nivelDeImportancia;
@@ -208,10 +221,11 @@ class _EventoPageState extends State<EventoPage> {
   }
   
  _notas(BuildContext context){
+  if(id==0){
         for (int i = 0; i < _taskNotas.length + 1; i++) {
-      TextEditingController notasController = TextEditingController();
-      notasControllers.add(notasController);
-    }
+          TextEditingController notasController = TextEditingController();
+          notasControllers.add(notasController);
+        }
     return Container(
       decoration: const BoxDecoration(
                           // color: Color(0xff63d3ff),
@@ -261,7 +275,71 @@ class _EventoPageState extends State<EventoPage> {
           ],  
         ],
       ),
+    );}
+    else{
+      if(bandera3){
+      for (int i = 0; i < notas.length +1; i++){
+        TextEditingController notasController = TextEditingController();
+        if(i != notas.length){_taskNotas.add(''); notasController.text=notas[i].nota;}
+        notasControllers.add(notasController);
+      }
+      notasControllers.removeAt(0);
+      TextEditingController notasController = TextEditingController();
+      notasControllers.add(notasController);
+      }
+      return Container(
+      decoration: const BoxDecoration(
+                          // color: Color(0xff63d3ff),
+                          borderRadius:  BorderRadius.all(Radius.circular(10)), 
+                          border: Border(
+                            bottom: BorderSide(color: Colors.blue),
+                            right: BorderSide(color: Colors.blue),
+                            left: BorderSide(color: Colors.blue),
+                            top: BorderSide(color: Colors.blue),
+                          ),
+                        ),
+      child: Column(      
+        children: [
+          const Text('Notas',style: TextStyle(fontSize: 18) ),
+          for (int i = 0; i < _taskNotas.length+ 1; i++) ...[
+            ListTile(
+              title: Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: notasControllers[i],
+                      decoration: InputDecoration(
+                        labelText: 'Nota ${i + 1}',
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    // ignore: prefer_const_constructors
+                    icon: i == _taskNotas.length ? Icon(Icons.add) : Icon(Icons.close_outlined),
+                    onPressed: () {
+                      if(i == _taskNotas.length){
+                        setState(() {
+                          bandera2=false;bandera3=false;
+                          _taskNotas.add('');
+                          notasControllers.add(TextEditingController());
+                        });
+                      }else{
+                        setState(() {
+                          bandera2=false;bandera3=false;
+                          _taskNotas.remove(_taskNotas[i]);
+                          notasControllers.removeAt(i);
+                        });
+                      }
+                    },
+                  )
+                ],
+              ),
+            ),
+          ],  
+        ],
+      ),
     );
+    }
   }
 
 
@@ -366,7 +444,7 @@ class _EventoPageState extends State<EventoPage> {
                           ], 
                           onChanged: (String? value) {
                             setState(() {
-                              nivelDeImportancia = value!;
+                              nivelDeImportancia = value!;bandera2=false;bandera3=false;
                             });
                           },
                         ),
@@ -387,7 +465,7 @@ class _EventoPageState extends State<EventoPage> {
                                 );
                                 if (date != null) {
                                   setState(() {
-                                    _selectedDate = date;
+                                    _selectedDate = date;bandera2=false;bandera3=false;
                                     // _fecha=_selectedDate.toString();
                                     // _fecha=_fecha.substring(0,10);
                                   });
@@ -408,7 +486,7 @@ class _EventoPageState extends State<EventoPage> {
                                 );
                                 if (time != null) {
                                   setState(() {
-                                    _selectedTime = time;
+                                    _selectedTime = time;bandera2=false;bandera3=false;
                                     // _hora=_selectedTime.toString();
                                     // _hora=_hora.substring(10,15);
                                     //_hora='${_selectedTime.hour}:${_selectedTime.minute}';
@@ -496,7 +574,7 @@ class _EventoPageState extends State<EventoPage> {
                     GestureDetector(
                       onTap: (){
                         setState(() {
-                          opcionColor = 1;
+                          opcionColor = 1;bandera2=false;bandera3=false;
                         });
                       },
                       child: Container(
@@ -515,7 +593,7 @@ class _EventoPageState extends State<EventoPage> {
                     GestureDetector(
                       onTap: (){
                         setState(() {
-                          opcionColor = 2;
+                          opcionColor = 2;bandera2=false;bandera3=false;
                         });
                       },
                       child: Container(
@@ -534,7 +612,7 @@ class _EventoPageState extends State<EventoPage> {
                     GestureDetector(
                       onTap: (){
                         setState(() {
-                          opcionColor = 3;
+                          opcionColor = 3;bandera2=false;bandera3=false;
                         });
                       },
                       child: Container(
@@ -553,7 +631,7 @@ class _EventoPageState extends State<EventoPage> {
                     GestureDetector(
                       onTap: (){
                         setState(() {
-                          opcionColor = 4;
+                          opcionColor = 4;bandera2=false;bandera3=false;
                         });
                       },
                       child: Container(
@@ -572,7 +650,7 @@ class _EventoPageState extends State<EventoPage> {
                     GestureDetector(
                       onTap: (){
                         setState(() {
-                          opcionColor = 5;
+                          opcionColor = 5;bandera2=false;bandera3=false;
                         });
                       },
                       child: Container(
@@ -591,7 +669,7 @@ class _EventoPageState extends State<EventoPage> {
                     GestureDetector(
                       onTap: (){
                         setState(() {
-                          opcionColor = 6;
+                          opcionColor = 6;bandera2=false;bandera3=false;
                         });
                       },
                       child: Container(

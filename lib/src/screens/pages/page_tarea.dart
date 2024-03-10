@@ -160,7 +160,7 @@ class _TareaPageState extends State<TareaPage> {
               bool available = await speechRecognizer.initialize();
               if(available){
                 setState(() {
-                  isListening = true;
+                  isListening = true;bandera2=false;bandera3=false;
                   speechRecognizer.listen(
                     onResult: (result) {
                       // _text = result.recognizedWords;
