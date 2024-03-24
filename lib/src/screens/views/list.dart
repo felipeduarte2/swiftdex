@@ -1,12 +1,8 @@
-// import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:iconly/iconly.dart';
 import 'package:listgenius/src/screens/data_base/crud_actividades.dart';
-// import 'package:listgenius/src/screens/data_base/crud_contactos.dart';
-// import 'package:listgenius/src/screens/data_base/crud_detalles.dart';
-// import 'package:listgenius/src/screens/data_base/crud_dias.dart';
-// import 'package:listgenius/src/screens/data_base/crud_notas.dart';
-// import 'package:listgenius/src/screens/data_base/crud_preparativos.dart';
-// import 'package:listgenius/src/screens/data_base/crud_viaje.dart';
+//import 'package:listgenius/src/screens/temas/mySearchDelegate.dart';
 import 'package:listgenius/src/screens/temas/removeact.dart';
 import 'package:listgenius/src/screens/temas/taskitem.dart';
 
@@ -20,14 +16,14 @@ class ListViewPage extends StatefulWidget {
 class _ListViewPageState extends State<ListViewPage> {
   List<Actividad>? _actividades;
   // List<Actividad>? _filteredActividades;
-  // late List<Actividad> _filteredActividades;
+  late List<Actividad> _filteredActividades;
   List<bool>? boolList;
   // final _searchQuery = TextEditingController();
   @override
   void initState() {
     super.initState();
     _loadActividades();
-    // _filteredActividades = [];
+    _filteredActividades = [];
   }
 
   @override
@@ -48,14 +44,6 @@ class _ListViewPageState extends State<ListViewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: CupertinoSearchTextField(
-      //     controller: _searchQuery,
-      //     onSubmitted: (value) {
-      //       _filterActividades(value);
-      //     },
-      //   ),
-      // ),
       body: _actividades != null
           ? _showActividades(context)
           : _buttonCircular(context),
@@ -77,42 +65,53 @@ class _ListViewPageState extends State<ListViewPage> {
     if(_actividades!.isEmpty){
       return const Center(child: Text("Sin Actividades",style: TextStyle(fontSize: 18)));
     }else{
-      return ListView.builder(
-              itemCount: _actividades!.length,
-              // itemCount: _filteredActividades.length,
-              itemBuilder: (BuildContext context, int index) {
-                Actividad actividad = _actividades![index];
-                // Actividad actividad = _filteredActividades[index];
-                if(actividad.realizado=="si"){boolList?[index] = true;}
-                return Dismissible(
-                  // key: Key(index.toString()),
-                  key: Key(actividad.idActividad.toString()),
-                  direction: DismissDirection.horizontal,
-                  background: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.delete,color: Colors.red,size: 35,),
-                      SizedBox(width: 8,),
-                      Text("Eliminar", style: TextStyle(color: Colors.red,fontSize: 24),)
-                    ]
+      return Column(
+        children: [
+          Container(
+            margin: const EdgeInsets.only(top: 5, bottom: 5, right: 20,left: 20),
+            child: const TextField(
+              //onChanged: (value) => _buscarActividad(value),
+              decoration: InputDecoration(
+                labelText: "Busqueda", suffixIcon: Icon(IconlyLight.search)
+              ),
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+                    itemCount: _actividades!.length,
+                    // itemCount: _filteredActividades.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      Actividad actividad = _actividades![index];
+                      // Actividad actividad = _filteredActividades[index];
+                      if(actividad.realizado=="si"){boolList?[index] = true;}
+                      return Dismissible(
+                        // key: Key(index.toString()),
+                        key: Key(actividad.idActividad.toString()),
+                        direction: DismissDirection.horizontal,
+                        background: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.delete,color: Colors.red,size: 35,),
+                            SizedBox(width: 8,),
+                            Text("Eliminar", style: TextStyle(color: Colors.red,fontSize: 24),)
+                          ]
+                        ),
+                        onDismissed: (direction) {
+                          Remove.removeFromDatabase(actividad);
+                          if(mounted){
+                            setState(() {
+                              _actividades?.removeAt(index);
+                              boolList?.removeAt(index);
+                            });
+                          }
+                        },
+                        child: TaskItem(actividad: actividad , isCheck: boolList?[index] ?? false,),
+                      ); 
+                    },
                   ),
-                  onDismissed: (direction) {
-                    Remove.removeFromDatabase(actividad);
-                    if(mounted){
-                      setState(() {
-                        _actividades?.removeAt(index);
-                        boolList?.removeAt(index);
-                        // _actividades?.removeAt(index);
-                        // _actividades?.remove(_actividades?[index]);
-                      // _actividades = actividades;
-                      // boolList= List<bool>.generate(actividades.length, (index) => false);
-                      });
-                    }
-                  },
-                  child: TaskItem(actividad: actividad , isCheck: boolList?[index] ?? false,),
-                ); 
-              },
-            );
+          ),
+        ],
+      );
     }
   }
 
@@ -121,7 +120,6 @@ class _ListViewPageState extends State<ListViewPage> {
     await showDialog(
       context: context, 
       builder: (BuildContext context){
-        // var ocultar2 = ocultar(context);
         return SimpleDialog(
           // title: const Text(
           //   'SELECCIONE UNA OPCIÓN',
@@ -130,8 +128,6 @@ class _ListViewPageState extends State<ListViewPage> {
           // ),
           // alignment:  Alignment.center,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          // alignment: Alignment.bottomRight,
-          // backgroundColor: const Color(0xffa37437),
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.all(25.0),
@@ -144,7 +140,6 @@ class _ListViewPageState extends State<ListViewPage> {
                     children: <Widget>[
                       GestureDetector(
                         onTap: () => {
-                          //ocultar(context),
                           _irTarea(context),
                         },
                         child: Container(
@@ -156,7 +151,6 @@ class _ListViewPageState extends State<ListViewPage> {
                           padding: const EdgeInsets.all(8.0,),
                           child: const Column(
                             children: <Widget>[
-                              // SizedBox(width: 70),
                               Icon(Icons.assignment, size: 90,color: Colors.black87,),
                               Text("TAREA",style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color: Colors.black87 )
                               ),
@@ -167,7 +161,6 @@ class _ListViewPageState extends State<ListViewPage> {
                       const SizedBox(width: 10),
                       GestureDetector(
                         onTap: () => {
-                          //Navigator.pop(context),
                           _irEvento(context),
                         },
                         child: Container(
@@ -175,11 +168,9 @@ class _ListViewPageState extends State<ListViewPage> {
                             color: Color(0xff63d3ff),
                             borderRadius: BorderRadius.all(Radius.circular(10)), 
                           ),
-                          // height: 50,
                           padding: const EdgeInsets.all(8.0),
                           child: const Column(
                             children: <Widget>[
-                              // SizedBox(width: 65),
                               Icon(Icons.event, size: 90,color: Colors.black87),
                               Text("EVENTO", style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color: Colors.black87)
                               ),
@@ -202,11 +193,9 @@ class _ListViewPageState extends State<ListViewPage> {
                             color: Color(0xff63d3ff),
                             borderRadius: BorderRadius.all(Radius.circular(10)), 
                           ),
-                          // height: 50,
                           padding: const EdgeInsets.all(8.0),
                           child: const Column(
                             children: <Widget>[
-                              // SizedBox(width: 65),
                               Icon(Icons.directions_run, size: 90,color: Colors.black87),
                               Text("RUTINA", style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color: Colors.black87)
                               ),
@@ -217,8 +206,6 @@ class _ListViewPageState extends State<ListViewPage> {
                       const SizedBox(width: 10),
                       GestureDetector(
                         onTap: () => {
-                          //Navigator.pop(context),
-                          // print("object"),
                           _irViaje(context),
                         },
                         child: Container(
@@ -226,12 +213,9 @@ class _ListViewPageState extends State<ListViewPage> {
                             color: Color(0xff63d3ff),
                             borderRadius: BorderRadius.all(Radius.circular(10)), 
                           ),
-                          // height: 60,
-                          // width: 120,
                           padding: const EdgeInsets.all(10.0),
                           child: const Column(
                             children: <Widget>[
-                              // SizedBox(width: 70),
                               Icon(Icons.note_alt_outlined, size: 90,color: Colors.black87),
                               Text("Nota",style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color: Colors.black87)),
                             ],
@@ -269,6 +253,15 @@ class _ListViewPageState extends State<ListViewPage> {
   _irEvento(BuildContext context) {
     Navigator.pop(context);
     Navigator.of(context).pushNamed("/evento",arguments: "0");
+  }
+  
+  _buscarActividad(String value) {
+    if(value.isEmpty){
+      _filteredActividades = _actividades!;
+    }else{
+      //_filteredActividades = _actividades!.where((element) => false)
+      //.where((Actividad) => Actividad["titulo"].toLowerCase().contains(value.toLowerCase().toList()));
+    }
   }
 
   // void _filterActividades(String query) {

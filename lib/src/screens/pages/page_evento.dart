@@ -1,9 +1,8 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
+import 'package:iconly/iconly.dart';
 import 'package:listgenius/src/screens/data_base/crud_actividades.dart';
-// import 'package:listgenius/src/screens/data_base/crud_contactos.dart';
 import 'package:listgenius/src/screens/data_base/crud_notas.dart';
-// import 'package:listgenius/src/screens/data_base/crud_preparativos.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
@@ -19,31 +18,21 @@ class _EventoPageState extends State<EventoPage> {
 
   final List<String> _taskNotas = [];
   List<TextEditingController> notasControllers = [];
-
-
   bool isListening = false;
   SpeechToText  speechRecognizer = SpeechToText();
-  
   int id = 0;
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
-
   final _tituloController = TextEditingController();
   final _lugarController = TextEditingController();
-  // final _contactoController = TextEditingController();
-  // final _preparativoController = TextEditingController();
   String _fecha = "0000/00/00";
   String _hora = "00:00";
   String nivelDeImportancia = "Normal";
-  // final _notasController = TextEditingController();
   bool bandera=true;
   String boton="Guardar";
   int opcionColor=1;
   late Actividad actividad0;
-  // late Contacto contacto0;
-  // late Preparativo preparativo0;
   List<Nota> notas = [];
-  // late Nota nota0;
   bool bandera2 = true;
   bool bandera3 = true;
 
@@ -56,7 +45,6 @@ class _EventoPageState extends State<EventoPage> {
   void didChangeDependencies() {
     final name = ModalRoute.of(context)?.settings.arguments;
     id = int.parse(name.toString());
-      //if (id != 0) {id++;}else{id--;};
     super.didChangeDependencies();
   }
 
@@ -70,7 +58,7 @@ class _EventoPageState extends State<EventoPage> {
         title: const Text('Agregar Nuevo Evento'),
         centerTitle: true,
         actions: <Widget>[
-           IconButton(icon: const Icon(Icons.save), onPressed: () async {
+           IconButton(icon: const Icon(IconlyLight.tick_square), onPressed: () async {
                                       if (_formKey.currentState!.validate()) {
                             if(id==0){
                               int id0 = 0;
@@ -176,7 +164,6 @@ class _EventoPageState extends State<EventoPage> {
     );
   }
 
-
   @override
   void dispose() {
     _tituloController.dispose();
@@ -192,26 +179,16 @@ class _EventoPageState extends State<EventoPage> {
     id = int.parse(name.toString());
 
     Actividad? actividad = await ActividadesCRUD().getActividadById(id);
-    // Contacto? contacto = await ContactosCRUD().getContactoById(id);
-    // Preparativo? preparativo = await PreparativosCRUD().getPreparativoById(id);
     List<Nota> nota2 = await  NotasCRUD().getAllNotasById(id);
-    // Nota? nota = await NotasCRUD().getNotaById(id);
     if(mounted){
       setState(() {
       actividad0 = actividad!;
-      // contacto0 = contacto!;
-      // preparativo0 = preparativo!;
       notas=nota2;
-      // nota0 = nota!;
       _tituloController.text=actividad.titulo;
-      // _descripcionController.text=actividad.descripcion;
       nivelDeImportancia=actividad.nivelDeImportancia;
       _fecha=actividad.fecha;
       _hora=actividad.hora;
       _lugarController.text=actividad.lugar;
-      // _contactoController.text=contacto.contacto;
-      // _preparativoController.text=preparativo.preparativo;
-      // _notasController.text=nota.nota;
       _selectedDate=DateTime.parse('$_fecha''T05:00:00.000Z');
       _selectedTime = TimeOfDay(hour:int.parse(_hora.split(":")[0]),minute: int.parse(_hora.split(":")[1]));
       bandera=false;
@@ -249,12 +226,13 @@ class _EventoPageState extends State<EventoPage> {
                       controller: notasControllers[i],
                       decoration: InputDecoration(
                         labelText: 'Nota ${i + 1}',
+                        prefixIcon: const Icon(IconlyLight.paper),
                       ),
                     ),
                   ),
                   IconButton(
                     // ignore: prefer_const_constructors
-                    icon: i == _taskNotas.length ? Icon(Icons.add) : Icon(Icons.close_outlined),
+                    icon: i == _taskNotas.length ? Icon(IconlyLight.plus) : Icon(IconlyLight.close_square),
                     onPressed: () {
                       if(i == _taskNotas.length){
                         setState(() {
@@ -310,12 +288,13 @@ class _EventoPageState extends State<EventoPage> {
                       controller: notasControllers[i],
                       decoration: InputDecoration(
                         labelText: 'Nota ${i + 1}',
+                        prefixIcon: const Icon(IconlyLight.paper),
                       ),
                     ),
                   ),
                   IconButton(
                     // ignore: prefer_const_constructors
-                    icon: i == _taskNotas.length ? Icon(Icons.add) : Icon(Icons.close_outlined),
+                    icon: i == _taskNotas.length ? Icon(IconlyLight.plus) : Icon(IconlyLight.close_square),
                     onPressed: () {
                       if(i == _taskNotas.length){
                         setState(() {
@@ -364,8 +343,7 @@ class _EventoPageState extends State<EventoPage> {
               ),
             _colores(),
             Container(
-              // margin: const EdgeInsets.all(60),
-              margin: const EdgeInsets.only(right: 60, left: 60,top: 10),
+              margin: const EdgeInsets.only(right: 30, left: 30,top: 10),
               decoration: const BoxDecoration(
                             // color: Color(0xff63d3ff),
                             borderRadius:  BorderRadius.all(Radius.circular(10)), 
@@ -388,7 +366,7 @@ class _EventoPageState extends State<EventoPage> {
                           controller: _tituloController,
                           decoration: const InputDecoration(
                             labelText: 'Evento',
-                            // hintStyle: TextStyle(color: Colors.black),
+                            prefixIcon: Icon(IconlyLight.document),
                             hintText: '¿Cuál es su Evento?',
                             //prefixIcon: Icon(Icons.title),
                             contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
@@ -414,8 +392,8 @@ class _EventoPageState extends State<EventoPage> {
                         DropdownButtonFormField<String>(
                           decoration: const InputDecoration(
                             labelText: 'Nivel de importancia',
-                            // hintStyle: TextStyle(color: Colors.black),
-                             contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                            prefixIcon: Icon(IconlyLight.category),
+                            contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                               border: OutlineInputBorder(),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -466,8 +444,6 @@ class _EventoPageState extends State<EventoPage> {
                                 if (date != null) {
                                   setState(() {
                                     _selectedDate = date;bandera2=false;bandera3=false;
-                                    // _fecha=_selectedDate.toString();
-                                    // _fecha=_fecha.substring(0,10);
                                   });
                                 }
                               },
@@ -487,9 +463,6 @@ class _EventoPageState extends State<EventoPage> {
                                 if (time != null) {
                                   setState(() {
                                     _selectedTime = time;bandera2=false;bandera3=false;
-                                    // _hora=_selectedTime.toString();
-                                    // _hora=_hora.substring(10,15);
-                                    //_hora='${_selectedTime.hour}:${_selectedTime.minute}';
                                   });
                                 }
                               },
@@ -504,9 +477,8 @@ class _EventoPageState extends State<EventoPage> {
                           controller: _lugarController,
                           decoration: const InputDecoration(
                             labelText: 'Lugar',
-                            // hintStyle: TextStyle(color: Colors.black),
+                            prefixIcon: Icon(IconlyLight.location),
                             hintText: '¿Cuál es el lugar de su Evento?',
-                            //prefixIcon: Icon(Icons.title),
                             contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                             border: OutlineInputBorder(),
                             enabledBorder: OutlineInputBorder(
@@ -521,29 +493,7 @@ class _EventoPageState extends State<EventoPage> {
                           maxLines: null,
                         ),
                         const SizedBox(height: 10.0),
-                        _notas(context),                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        //   children: <Widget>[
-                        //     ElevatedButton(
-                        //       style: const ButtonStyle(
-                        //         padding: MaterialStatePropertyAll(EdgeInsets.only(right: 10, left: 10)),
-                        //       ),
-                        //       onPressed: () async {                        
-            
-                        //       },
-                        //       child: Text(boton),
-                        //     ),
-                        //     ElevatedButton(
-                        //       style: const ButtonStyle(
-                        //         padding: MaterialStatePropertyAll(EdgeInsets.only(right:10, left: 10)),
-                        //       ),
-                        //       onPressed: () async {
-                        //         Navigator.pop(context);
-                        //       },
-                        //       child: const Text('Cancelar'),
-                        //     ),
-                        //   ],
-                        // ),
+                        _notas(context),
                       ],
                     ),
                   ),

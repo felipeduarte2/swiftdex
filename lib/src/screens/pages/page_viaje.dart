@@ -1,5 +1,6 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
+import 'package:iconly/iconly.dart';
 import 'package:listgenius/src/screens/data_base/crud_actividades.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:speech_to_text/speech_to_text.dart';
@@ -16,18 +17,13 @@ class _ViajePageState extends State<ViajePage> {
 
   bool isListening = false;
   SpeechToText  speechRecognizer = SpeechToText();
-  
   int id = 0;
-
   final _tituloController = TextEditingController();
-  // String _fecha = "2000/00/00";
   String _hora = "00:00";
   String nivelDeImportancia = "Normal";
-
   bool bandera=true;
   String boton="Guardar";
   int opcionColor=1;
-
   late Actividad actividad0;
 
   @override
@@ -39,7 +35,6 @@ class _ViajePageState extends State<ViajePage> {
   void didChangeDependencies() {
     final name = ModalRoute.of(context)?.settings.arguments;
     id = int.parse(name.toString());
-      //if (id != 0) {id++;}else{id--;};
     super.didChangeDependencies();
   }
 
@@ -49,17 +44,15 @@ class _ViajePageState extends State<ViajePage> {
     id = int.parse(name.toString());
     return Scaffold(
       appBar: AppBar(
-        // backgroundColor: const Color(0xffa37437),
         title: const Text('Agregar Nueva Nota'),
         centerTitle: true,
         actions: <Widget>[
-           IconButton(icon: const Icon(Icons.save), onPressed: () async {
+           IconButton(icon: const Icon(IconlyLight.tick_square), onPressed: () async {
             if (_formKey.currentState!.validate()) {
                             if(id==0){
                               int id0 = 0;
                               String? id2 = '';
                               SharedPreferences prefs = await SharedPreferences.getInstance();
-                              //prefs.setString('ID', id);
                               id2 = prefs.getString('ID');
                               id0 = int.parse(id2!);
                               id0++;
@@ -109,7 +102,6 @@ class _ViajePageState extends State<ViajePage> {
                   isListening = true;
                   speechRecognizer.listen(
                     onResult: (result) {
-                      // _text = result.recognizedWords;
                       _tituloController.text=result.recognizedWords;
                     }
                   );
@@ -143,7 +135,6 @@ class _ViajePageState extends State<ViajePage> {
         actividad0 = actividad!;
         _tituloController.text=actividad.titulo;
         nivelDeImportancia=actividad.nivelDeImportancia;
-        // _fecha=actividad.fecha;
         _hora=actividad.hora;
         bandera=false;
         boton = "Actualizar";
@@ -169,7 +160,6 @@ class _ViajePageState extends State<ViajePage> {
               _colores(),
               Container(
                  margin: const EdgeInsets.only(right: 60, left: 60,top: 10),
-                // margin: const EdgeInsets.all(60),
               decoration: const BoxDecoration(
                             // color: Color(0xff63d3ff),
                             borderRadius:  BorderRadius.all(Radius.circular(10)), 
@@ -192,19 +182,10 @@ class _ViajePageState extends State<ViajePage> {
                           controller: _tituloController,
                           decoration: const InputDecoration(
                             labelText: 'Nota',
-                            // hintStyle: TextStyle(color: Colors.black),
                             hintText: '¿Cual es su Nota?',
-                            //prefixIcon: Icon(Icons.title),
+                            prefixIcon: Icon(IconlyLight.document),
                             contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                             border: InputBorder.none, //OutlineInputBorder(),
-                            // enabledBorder: OutlineInputBorder(
-                            //   borderRadius: BorderRadius.all(Radius.circular(10)),
-                            //   borderSide: BorderSide(color: Colors.blue),
-                            // ),
-                            // focusedBorder: OutlineInputBorder(
-                            //   borderRadius: BorderRadius.all(Radius.circular(10)),
-                            //   borderSide: BorderSide(color: Colors.blue),
-                            // )
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -215,29 +196,6 @@ class _ViajePageState extends State<ViajePage> {
                             maxLines: null,
                         ),
                         const SizedBox(height: 10.0),
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        //   children: <Widget>[
-                        //     ElevatedButton(
-                        //       style: const ButtonStyle(
-                        //         padding: MaterialStatePropertyAll(EdgeInsets.only(right: 20, left: 20)),
-                        //       ),
-                        //       onPressed: () async {
-                                
-                        //       },
-                        //       child: Text(boton),
-                        //     ),
-                        //     ElevatedButton(
-                        //       style: const ButtonStyle(
-                        //         padding: MaterialStatePropertyAll(EdgeInsets.only(right: 20, left: 20)),
-                        //       ),
-                        //       onPressed: () async {
-                        //         Navigator.pop(context);
-                        //       },
-                        //       child: const Text('Cancelar'),
-                        //     ),
-                        //   ],
-                        // ),
                       ],
                     ),
                   ),
@@ -252,27 +210,12 @@ class _ViajePageState extends State<ViajePage> {
   @override
   void dispose() {
     _tituloController.dispose();
-    // _descripcionController.dispose();
-    // _itinerarioController.dispose();
-    // _alojamientoController.dispose();
-    // _transporteController.dispose();
-    // _notasController.dispose();
     super.dispose();
   }
   
   _colores() {
     return Container(
       margin: const EdgeInsets.only(right: 60, left: 60),
-                // decoration: const BoxDecoration(
-                //             // color: Color(0xff63d3ff),
-                //             borderRadius:  BorderRadius.all(Radius.circular(10)), 
-                //             border: Border(
-                //               bottom: BorderSide(color: Colors.blue),
-                //               right: BorderSide(color: Colors.blue),
-                //               left: BorderSide(color: Colors.blue),
-                //               top: BorderSide(color: Colors.blue),
-                //             ),
-                //           ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[

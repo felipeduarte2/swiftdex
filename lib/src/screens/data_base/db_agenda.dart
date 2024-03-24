@@ -21,20 +21,6 @@ class DatabaseHelper {
   static const columnHorario2 = "horario2";
   static const columnColor = "color";
 
-  // CONTACTOS
-  // static const tableContactos = "contactos";
-  // static const columnIdContacto = "id_contacto";
-  // static const columnContacto = "contacto";
-  // static const columnRealizadoContacto = "realizado";
-  // static const columnIdActividadContacto = "id_actividad";
-
-  // PREPARATIVOS
-  // static const tablePreparativos = "preparativos";
-  // static const columnIdPreparativo = "id_preparativo";
-  // static const columnPreparativo = "preparativo";
-  // static const columnRealizadoPreparativo = "realizado";
-  // static const columnIdActividadPreparativo = "id_actividad";
-
   // DETALLES
   static const tableDetalles = "detalles";
   static const columnIdDetalle = "id_detalle";
@@ -53,14 +39,6 @@ class DatabaseHelper {
   static const columnSabado = "sabado";
   static const columnDomingo = "domingo";
   static const columnIdActividadDia = "id_actividad";
-
-  //INFORMACION VIAJE
-  // static const tableViaje = "informacion_viaje";
-  // static const columnIdViaje = "id_inf";
-  // static const columnItinerario = "itinerario";
-  // static const columnAlojamiento = "alojamiento";
-  // static const columnTransporte = "transporte";
-  // static const columnIdActividadViaje = "id_actividad";
 
   //NOTAS
   static const tableNotas = "notas";
@@ -103,22 +81,7 @@ class DatabaseHelper {
         $columnColor INTEGER
       )
     ''');
-    // await db.execute('''
-    //   CREATE TABLE $tableContactos (
-    //     $columnIdContacto INTEGER PRIMARY KEY AUTOINCREMENT,
-    //     $columnContacto TEXT NOT NULL,
-    //     $columnRealizadoContacto VARCHAR(2) NOT NULL,
-    //     $columnIdActividadContacto INTEGER REFERENCES $tableActividades($columnIdActividad)
-    //   )
-    // ''');
-    // await db.execute('''
-    //   CREATE TABLE $tablePreparativos (
-    //     $columnIdPreparativo INTEGER PRIMARY KEY AUTOINCREMENT,
-    //     $columnPreparativo TEXT NOT NULL,
-    //     $columnRealizadoPreparativo VARCHAR(2) NOT NULL,
-    //     $columnIdActividadPreparativo INTEGER REFERENCES $tableActividades($columnIdActividad)
-    //   )
-    // ''');
+
     await db.execute('''
       CREATE TABLE $tableDetalles (
         $columnIdDetalle INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -140,15 +103,7 @@ class DatabaseHelper {
         $columnIdActividadDia INTEGER REFERENCES $tableActividades($columnIdActividad)
       )
     ''');
-    // await db.execute('''
-    //   CREATE TABLE $tableViaje (
-    //     $columnIdViaje INTEGER PRIMARY KEY AUTOINCREMENT,
-    //     $columnItinerario TEXT NOT NULL,
-    //     $columnAlojamiento TEXT NOT NULL,
-    //     $columnTransporte TEXT NOT NULL,
-    //     $columnIdActividadViaje INTEGER REFERENCES $tableActividades($columnIdActividad)
-    //   )
-    // ''');
+
     await db.execute('''
       CREATE TABLE $tableNotas (
         $columnIdNota INTEGER PRIMARY KEY AUTOINCREMENT,

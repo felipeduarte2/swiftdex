@@ -1,3 +1,30 @@
+import 'package:flutter/material.dart';
+import 'package:listgenius/src/screens/data_base/crud_actividades.dart';
+
+class SearchActivityDelegate extends SearchDelegate<Actividad>{
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    return [Center()];
+  }
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return Center();
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    return Center();
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    return Center();
+  }
+
+}
+
+
 // ignore: duplicate_ignore
 // ignore_for_file: file_names
 // import 'package:flutter/material.dart';

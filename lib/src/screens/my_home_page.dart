@@ -31,9 +31,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       id = prefs.getString('ID') ?? '';
     });
-
     if (id == "") {
-      //SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('ID', '0');
     }
   }
@@ -45,10 +43,8 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
 
       appBar: AppBar(
-        //  backgroundColor: const Color(0xffa37437),
-        title: const Text("Listgenius", style: TextStyle(fontSize: 20,)),
+        title: const Text("SwiftDex", style: TextStyle(fontSize: 20,)),
         centerTitle: true,
-        //  title: Text(titulo,  style: const TextStyle(color: Color(0xffede0da),  fontWeight: FontWeight.bold,fontFamily: 'sans-serif', fontSize: 22)),
       ),
 
       body: PageView(
@@ -60,17 +56,12 @@ class _MyHomePageState extends State<MyHomePage> {
           TableCalendarPage(),
           UserPage(),
         ],
-      ),// _pages[_currentIndex],
+      ),
 
       bottomNavigationBar: BottomAppBar(
-        // shadowColor: Colors.amber,
         notchMargin: 10,
-        // elevation: 0, 
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-          // decoration: const BoxDecoration(
-          //   border: Border(top: BorderSide(color: Colors.red))
-          // ),
           child: Obx(
             ()=> Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -83,28 +74,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
-      //  BottomNavigationBar(
-      //   onTap: onTapped,
-      //   currentIndex: _currentIndex,
-
-      //   items: const [
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.list,),
-      //       label: "LISTA",
-            
-      //       // backgroundColor: Color(0xffba9750),
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.calendar_today),
-      //       label: "CALENDARIO",
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.person),
-      //       label: "USUARIO",
-            
-      //     ),
-      //   ],
-      // ),
     );
   }
 
@@ -117,7 +86,6 @@ class _MyHomePageState extends State<MyHomePage> {
           Icon(
             icon,
             color: controller.currentPage.value == page ? Colors.blue : Colors.blue[200],
-            // color: Colors.white,
           ),
           Text(
             label,

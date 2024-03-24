@@ -1,5 +1,6 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
+import 'package:iconly/iconly.dart';
 import 'package:listgenius/src/screens/data_base/crud_actividades.dart';
 import 'package:listgenius/src/screens/data_base/crud_detalles.dart';
 import 'package:listgenius/src/screens/data_base/crud_dias.dart';
@@ -22,10 +23,8 @@ class _RutinaPageState extends State<RutinaPage> {
   List<TextEditingController> textControllers = [];
   final List<String> _taskNotas = [];
   List<TextEditingController> notasControllers = [];
-
   bool isListening = false;
   SpeechToText  speechRecognizer = SpeechToText();
-  
   int id = 0;
   final _tituloController = TextEditingController();
   // final _descripcionController = TextEditingController();
@@ -34,9 +33,6 @@ class _RutinaPageState extends State<RutinaPage> {
   TimeOfDay _selectedTime2 = TimeOfDay.now();
   String _hora1 = "00:00";
   String _hora2 = "00:00";
-  // final _detallesController = TextEditingController();
-  // final _notasController = TextEditingController();
-
   String lunes = "no";
   String martes = "no";
   String miercoles = "no";
@@ -44,7 +40,6 @@ class _RutinaPageState extends State<RutinaPage> {
   String viernes = "no";
   String sabado = "no";
   String domingo = "no";
-
   bool lu = false;
   bool ma = false;
   bool mi = false;
@@ -57,8 +52,6 @@ class _RutinaPageState extends State<RutinaPage> {
   String boton="Guardar";
   int opcionColor=1;
   late Actividad actividad0;
-  // late Nota nota0;
-  // late Detalle detalle0;
   late Dia dia0;
   List<Detalle> detalles = [];
   List<Nota> notas = [];
@@ -88,7 +81,7 @@ class _RutinaPageState extends State<RutinaPage> {
         title: const Text('Agregar Nueva Rutina'),
         centerTitle: true,
         actions: <Widget>[
-           IconButton(icon: const Icon(Icons.save), onPressed: () async {
+           IconButton(icon: const Icon(IconlyLight.tick_square), onPressed: () async {
             if (_formKey.currentState!.validate()) {
                             if(id==0){
                               int id0 = 0;
@@ -103,7 +96,6 @@ class _RutinaPageState extends State<RutinaPage> {
                                 idActividad: id0,
                                 categoria: "Rutina",
                                 titulo:_tituloController.text,
-                                // descripcion: _descripcionController.text,
                                 nivelDeImportancia: nivelDeImportancia,
                                 realizado: "no",
                                 fecha: "2000-00-00",
@@ -121,7 +113,6 @@ class _RutinaPageState extends State<RutinaPage> {
                                   idActividad: id0,
                                 );
                                 if(controller.text.isNotEmpty){await DetallesCRUD().insertDetalle(detalle);}
-                                // await DetallesCRUD().insertDetalle(detalle);
                               }
                               Dia dia = Dia(
                                 idActividad: id0,
@@ -139,24 +130,15 @@ class _RutinaPageState extends State<RutinaPage> {
                                   nota: controller.text,
                                   idActividad: id0,
                                 );
-                                // await NotasCRUD().insertNota(nota);
                                 if(controller.text.isNotEmpty){await NotasCRUD().insertNota(nota);}
                               }
-                              // Nota  nota = Nota(
-                              //   //idNota : id0 ,
-                              //   nota: "",//_notasController.text,
-                              //   idActividad: id0,
-                              // );
-                              // await NotasCRUD().insertNota(nota);
                             }
                             else{
                               actividad0.titulo=_tituloController.text;
-                              // actividad0.descripcion=_descripcionController.text;
                               actividad0.nivelDeImportancia=nivelDeImportancia;
                               actividad0.horario1=_hora1;
                               actividad0.horario2=_hora2;
                               actividad0.color=opcionColor;
-                              // detalle0.detalle= "";//_descripcionController.text;
                               dia0.lunes=lunes;
                               dia0.martes=martes;
                               dia0.miercoles=miercoles;
@@ -164,7 +146,6 @@ class _RutinaPageState extends State<RutinaPage> {
                               dia0.viernes=viernes;
                               dia0.sabado=sabado;
                               dia0.domingo=domingo;
-                              // nota0.nota= "";//_notasController.text;
                               await ActividadesCRUD().updateActividad(actividad0);
                               await DiasCRUD().updateDia(dia0);
                               DetallesCRUD().deleteDetalle(id);
@@ -175,7 +156,6 @@ class _RutinaPageState extends State<RutinaPage> {
                                   idActividad: id,
                                 );
                                 if(controller.text.isNotEmpty){await DetallesCRUD().insertDetalle(detalle);}
-                                // await DetallesCRUD().insertDetalle(detalle);
                               }
                               NotasCRUD().deleteNota(id);
                               for (TextEditingController controller in notasControllers) {
@@ -185,7 +165,6 @@ class _RutinaPageState extends State<RutinaPage> {
                                 );
                                 if(controller.text.isNotEmpty){await NotasCRUD().insertNota(nota);}
                               }
-                              // await NotasCRUD().updateNota(nota0);
                             }
                             // ignore: use_build_context_synchronously
                             Navigator.pop(context);
@@ -261,18 +240,13 @@ class _RutinaPageState extends State<RutinaPage> {
     if(mounted){
       setState(() {
         actividad0 = actividad!;
-        // detalle0 = detalle!;
         dia0  = dia!;
-        // nota0 = nota!;
         detalles =detalle2;
         notas=nota2;
         _tituloController.text=actividad.titulo;
-        // _descripcionController.text=actividad.descripcion;
         nivelDeImportancia=actividad.nivelDeImportancia;
         _hora1=actividad.horario1;
         _hora2=actividad.horario2;
-        // _detallesController.text=detalle.detalle;
-        // _notasController.text=nota.nota;
         _selectedTime1== TimeOfDay(hour:int.parse(_hora1.split(":")[0]),minute: int.parse(_hora1.split(":")[1]));
         _selectedTime2== TimeOfDay(hour:int.parse(_hora2.split(":")[0]),minute: int.parse(_hora2.split(":")[1]));
         if(dia.lunes=="si"){lu=true;lunes="si";}
@@ -317,12 +291,13 @@ class _RutinaPageState extends State<RutinaPage> {
                       controller: textControllers[i],
                       decoration: InputDecoration(
                         labelText: 'Detalle ${i + 1}',
+                        prefixIcon: const Icon(IconlyLight.bookmark),
                       ),
                     ),
                   ),
                   IconButton(
                     // ignore: prefer_const_constructors
-                    icon: i == _taskList.length ? Icon(Icons.add) : Icon(Icons.close_outlined),
+                    icon: i == _taskList.length ?  Icon(IconlyLight.plus) : Icon(IconlyLight.close_square),
                     onPressed: () {
                       if(i == _taskList.length){
                         setState(() {
@@ -378,12 +353,13 @@ class _RutinaPageState extends State<RutinaPage> {
                       controller: textControllers[i],
                       decoration: InputDecoration(
                         labelText: 'Subtarea ${i + 1}',
+                        prefixIcon: const Icon(IconlyLight.bookmark),
                       ),
                     ),
                   ),
                   IconButton(
                     // ignore: prefer_const_constructors
-                    icon: i == _taskList.length ? Icon(Icons.add) : Icon(Icons.close_outlined),
+                    icon: i == _taskList.length ?  Icon(IconlyLight.plus) : Icon(IconlyLight.close_square),
                     onPressed: () {
                       if(i == _taskList.length){
                         setState(() {
@@ -439,12 +415,13 @@ class _RutinaPageState extends State<RutinaPage> {
                       controller: notasControllers[i],
                       decoration: InputDecoration(
                         labelText: 'Nota ${i + 1}',
+                        prefixIcon: const Icon(IconlyLight.paper),
                       ),
                     ),
                   ),
                   IconButton(
                     // ignore: prefer_const_constructors
-                    icon: i == _taskNotas.length ? Icon(Icons.add) : Icon(Icons.close_outlined),
+                    icon: i == _taskNotas.length ? Icon(IconlyLight.plus) : Icon(IconlyLight.close_square),
                     onPressed: () {
                       if(i == _taskNotas.length){
                         setState(() {
@@ -500,12 +477,13 @@ class _RutinaPageState extends State<RutinaPage> {
                       controller: notasControllers[i],
                       decoration: InputDecoration(
                         labelText: 'Nota ${i + 1}',
+                        prefixIcon: const Icon(IconlyLight.paper),
                       ),
                     ),
                   ),
                   IconButton(
                     // ignore: prefer_const_constructors
-                    icon: i == _taskNotas.length ? Icon(Icons.add) : Icon(Icons.close_outlined),
+                    icon: i == _taskNotas.length ? Icon(IconlyLight.plus) : Icon(IconlyLight.close_square),
                     onPressed: () {
                       if(i == _taskNotas.length){
                         setState(() {
@@ -532,7 +510,6 @@ class _RutinaPageState extends State<RutinaPage> {
     }
   }
 
-
   _showActividad(BuildContext context) {
       if (id != 0){
         if(bandera){
@@ -550,10 +527,8 @@ class _RutinaPageState extends State<RutinaPage> {
             ),
             _colores(),
             Container(
-              margin: const EdgeInsets.only(right: 60, left: 60,top: 10),
-              // margin: const EdgeInsets.all(60),
+              margin: const EdgeInsets.only(right: 30, left: 30,top: 10),
               decoration: const BoxDecoration(
-                            // color: Color(0xff63d3ff),
                             borderRadius:  BorderRadius.all(Radius.circular(10)), 
                             border: Border(
                               bottom: BorderSide(color: Colors.blue),
@@ -564,7 +539,6 @@ class _RutinaPageState extends State<RutinaPage> {
                           ),
               child: Form(
                 key: _formKey,
-                // child: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
@@ -574,9 +548,8 @@ class _RutinaPageState extends State<RutinaPage> {
                           controller: _tituloController,
                           decoration: const InputDecoration(
                             labelText: 'Rutina',
-                            // hintStyle: TextStyle(color: Colors.black),
                             hintText: '¿Cual es su Rutina?',
-                            //prefixIcon: Icon(Icons.title),
+                            prefixIcon: Icon(IconlyLight.document),
                             contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                             border: OutlineInputBorder(),
                             enabledBorder: OutlineInputBorder(
@@ -600,8 +573,8 @@ class _RutinaPageState extends State<RutinaPage> {
                         DropdownButtonFormField<String>(
                           decoration: const InputDecoration(
                             labelText: 'Nivel de importancia',
-                            // hintStyle: TextStyle(color: Colors.black),
-                             contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                            prefixIcon: Icon(IconlyLight.category),
+                            contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                               border: OutlineInputBorder(),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -613,7 +586,6 @@ class _RutinaPageState extends State<RutinaPage> {
                               )
                           ),
                           value: 'Normal',                
-                          // DropdownButton(items: [DropdownMenuItem(child: child)]),
                           items: const [
                             DropdownMenuItem(
                               value: 'Normal',

@@ -1,5 +1,6 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
+import 'package:iconly/iconly.dart';
 import 'package:listgenius/src/screens/data_base/crud_actividades.dart';
 import 'package:listgenius/src/screens/data_base/crud_detalles.dart';
 import 'package:listgenius/src/screens/data_base/crud_notas.dart';
@@ -20,7 +21,6 @@ class _TareaPageState extends State<TareaPage> {
   List<TextEditingController> textControllers = [];
   final List<String> _taskNotas = [];
   List<TextEditingController> notasControllers = [];
-
   SpeechToText  speechRecognizer = SpeechToText();
   bool isListening = false;
   int id = 0;
@@ -34,7 +34,6 @@ class _TareaPageState extends State<TareaPage> {
   String boton="Guardar";
   int opcionColor=1;
   late Actividad actividad0;
-  // late Detalle  detalle0;
   bool bandera2 = true;
   bool bandera3 = true;
   late  Nota nota0;
@@ -50,7 +49,6 @@ class _TareaPageState extends State<TareaPage> {
   void didChangeDependencies() {
     final name = ModalRoute.of(context)?.settings.arguments;
     id = int.parse(name.toString());
-      //if (id != 0) {id++;}else{id--;};
     super.didChangeDependencies();
   }
 
@@ -66,7 +64,7 @@ class _TareaPageState extends State<TareaPage> {
         centerTitle: true,
         actions: <Widget>[
           IconButton(
-            icon: const Icon(Icons.save), 
+            icon: const Icon(IconlyLight.tick_square),
             onPressed: () async {
               if (_formKey.currentState!.validate()) {
                              if(id==0){
@@ -246,12 +244,13 @@ class _TareaPageState extends State<TareaPage> {
                       controller: textControllers[i],
                       decoration: InputDecoration(
                         labelText: 'Subtarea ${i + 1}',
+                        prefixIcon: const Icon(IconlyLight.bookmark),
                       ),
                     ),
                   ),
                   IconButton(
                     // ignore: prefer_const_constructors
-                    icon: i == _taskList.length ? Icon(Icons.add) : Icon(Icons.close_outlined),
+                    icon: i == _taskList.length ? Icon(IconlyLight.plus) : Icon(IconlyLight.close_square),
                     onPressed: () {
                       if(i == _taskList.length){
                         setState(() {
@@ -307,12 +306,13 @@ class _TareaPageState extends State<TareaPage> {
                       controller: textControllers[i],
                       decoration: InputDecoration(
                         labelText: 'Subtarea ${i + 1}',
+                        prefixIcon: const Icon(IconlyLight.bookmark),
                       ),
                     ),
                   ),
                   IconButton(
                     // ignore: prefer_const_constructors
-                    icon: i == _taskList.length ? Icon(Icons.add) : Icon(Icons.close_outlined),
+                    icon: i == _taskList.length ? Icon(IconlyLight.plus) : Icon(IconlyLight.close_square),
                     onPressed: () {
                       if(i == _taskList.length){
                         setState(() {
@@ -368,12 +368,13 @@ class _TareaPageState extends State<TareaPage> {
                       controller: notasControllers[i],
                       decoration: InputDecoration(
                         labelText: 'Nota ${i + 1}',
+                        prefixIcon: const Icon(IconlyLight.paper),
                       ),
                     ),
                   ),
                   IconButton(
                     // ignore: prefer_const_constructors
-                    icon: i == _taskNotas.length ? Icon(Icons.add) : Icon(Icons.close_outlined),
+                    icon: i == _taskNotas.length ? Icon(IconlyLight.plus) : Icon(IconlyLight.close_square),
                     onPressed: () {
                       if(i == _taskNotas.length){
                         setState(() {
@@ -429,12 +430,13 @@ class _TareaPageState extends State<TareaPage> {
                       controller: notasControllers[i],
                       decoration: InputDecoration(
                         labelText: 'Nota ${i + 1}',
+                        prefixIcon: const Icon(IconlyLight.paper),
                       ),
                     ),
                   ),
                   IconButton(
                     // ignore: prefer_const_constructors
-                    icon: i == _taskNotas.length ? Icon(Icons.add) : Icon(Icons.close_outlined),
+                    icon: i == _taskNotas.length ? Icon(IconlyLight.plus) : Icon(IconlyLight.close_square),
                     onPressed: () {
                       if(i == _taskNotas.length){
                         setState(() {
@@ -483,7 +485,7 @@ class _TareaPageState extends State<TareaPage> {
             _colores(),
             Container(
               // margin: const EdgeInsets.all(60),
-              margin: const EdgeInsets.only(right: 60, left: 60,top: 10),
+              margin: const EdgeInsets.only(right: 30, left: 30,top: 10),
               decoration: const BoxDecoration(
                             // color: Color(0xff63d3ff),
                             borderRadius:  BorderRadius.all(Radius.circular(10)), 
@@ -506,9 +508,8 @@ class _TareaPageState extends State<TareaPage> {
                           controller: _tituloController,
                           decoration: const InputDecoration(
                             labelText: 'Tarea',
-                            // hintStyle: TextStyle(color: Colors.black),
+                            prefixIcon: Icon(IconlyLight.document),
                             hintText: '¿Cuál es su Tarea?',
-                            //prefixIcon: Icon(Icons.title),
                             contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                             border: OutlineInputBorder(),
                             enabledBorder: OutlineInputBorder(
@@ -532,6 +533,7 @@ class _TareaPageState extends State<TareaPage> {
                         DropdownButtonFormField<String>(
                           decoration: const InputDecoration(
                             labelText: 'Nivel de importancia',
+                            prefixIcon: Icon(IconlyLight.category),
                             // hintStyle: TextStyle(color: Colors.black),
                              contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                               border: OutlineInputBorder(),
@@ -777,7 +779,6 @@ class _TareaPageState extends State<TareaPage> {
                 ),
     );
   }
-  
 
   @override
   void dispose() {

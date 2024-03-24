@@ -8,15 +8,19 @@ class UserPage extends StatelessWidget {
     return  ListView(
       children: <Widget>[
         // const SizedBox(width: 100,),
-        Padding(
-          padding: const EdgeInsets.only(top: 15, left: 10, right: 10, bottom: 10),
-          child: Container(
-            width: double.infinity,
-            height: 100,
-            // height: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.blueGrey[200],
-              borderRadius: const BorderRadius.all(Radius.circular(10)), 
+        GestureDetector(
+          onTap: () => Navigator.of(context).pushNamed("/user_info"),//, '/user_info'),
+          //Navigator.of(context).pushNamed("/viaje",arguments: "0");
+          child: Padding(
+            padding: const EdgeInsets.only(top: 15, left: 10, right: 10, bottom: 10),
+            child: Container(
+              width: double.infinity,
+              height: 100,
+              // height: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.blueGrey[200],
+                borderRadius: const BorderRadius.all(Radius.circular(10)), 
+              ),
             ),
           ),
         ),

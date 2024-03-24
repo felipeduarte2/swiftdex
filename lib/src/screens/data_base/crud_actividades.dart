@@ -14,6 +14,56 @@ class ActividadesCRUD {
     return actividadesMap.map((actividad) => Actividad.fromMap(actividad)).toList();
   }
 
+  Future<List<Actividad>> getAllActividadesWhereNotRutina() async {
+    Database database = await DatabaseHelper.instance.database;
+    final List<Map<String, dynamic>> actividadesMap = await database.query(
+      DatabaseHelper.tableActividades,
+      where: '${DatabaseHelper.columnCategoria} != ?',
+      whereArgs: ["Rutina"],
+      );
+    return actividadesMap.map((actividad) => Actividad.fromMap(actividad)).toList();
+  }
+
+  Future<List<Actividad>> getAllActividadesWhereRutina() async {
+    Database database = await DatabaseHelper.instance.database;
+    final List<Map<String, dynamic>> actividadesMap = await database.query(
+      DatabaseHelper.tableActividades,
+      where: '${DatabaseHelper.columnCategoria} = ?',
+      whereArgs: ["Rutina"],
+      );
+    return actividadesMap.map((actividad) => Actividad.fromMap(actividad)).toList();
+  }
+
+  Future<List<Actividad>> getAllActividadesWhereTarea() async {
+    Database database = await DatabaseHelper.instance.database;
+    final List<Map<String, dynamic>> actividadesMap = await database.query(
+      DatabaseHelper.tableActividades,
+      where: '${DatabaseHelper.columnCategoria} = ?',
+      whereArgs: ["Tarea"],
+      );
+    return actividadesMap.map((actividad) => Actividad.fromMap(actividad)).toList();
+  }
+
+  Future<List<Actividad>> getAllActividadesWhereEvento() async {
+    Database database = await DatabaseHelper.instance.database;
+    final List<Map<String, dynamic>> actividadesMap = await database.query(
+      DatabaseHelper.tableActividades,
+      where: '${DatabaseHelper.columnCategoria} = ?',
+      whereArgs: ["Evento"],
+      );
+    return actividadesMap.map((actividad) => Actividad.fromMap(actividad)).toList();
+  }
+
+  Future<List<Actividad>> getAllActividadesWhereNota() async {
+    Database database = await DatabaseHelper.instance.database;
+    final List<Map<String, dynamic>> actividadesMap = await database.query(
+      DatabaseHelper.tableActividades,
+      where: '${DatabaseHelper.columnCategoria} = ?',
+      whereArgs: ["Nota"],
+      );
+    return actividadesMap.map((actividad) => Actividad.fromMap(actividad)).toList();
+  }
+
   Future<Actividad?> getActividadById(int id) async {
     Database db = await DatabaseHelper.instance.database;
     List<Map<String, dynamic>> maps = await db.query(
