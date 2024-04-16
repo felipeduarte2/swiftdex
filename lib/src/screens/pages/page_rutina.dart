@@ -19,18 +19,30 @@ class RutinaPage extends StatefulWidget {
 class _RutinaPageState extends State<RutinaPage> {
   final _formKey = GlobalKey<FormState>();
 
+  // Listas de string para las subtares y las notas
   final List<String> _taskList = [];
-  List<TextEditingController> textControllers = [];
   final List<String> _taskNotas = [];
+
+  // Listas de controladores para los controllers de las subtareas y las notas
+  List<TextEditingController> textControllers = [];
   List<TextEditingController> notasControllers = [];
+
+  // obejeto pra la clase SpeechToText y el bool para el estado del microndelfo
   bool isListening = false;
   SpeechToText  speechRecognizer = SpeechToText();
-  int id = 0;
-  final _tituloController = TextEditingController();
-  // final _descripcionController = TextEditingController();
-  String nivelDeImportancia = "Normal";
+
+  // Variables para las hora
   TimeOfDay _selectedTime1 = TimeOfDay.now();
   TimeOfDay _selectedTime2 = TimeOfDay.now();
+
+  // Variable para el id de la tarea a editar o null si es nueva
+  int id = 0;
+
+  //Controller para el titulo  
+  final _tituloController = TextEditingController();
+
+  //Variables para los datos compartidos entre las pantallas
+  String nivelDeImportancia = "Normal";
   String _hora1 = "00:00";
   String _hora2 = "00:00";
   String lunes = "no";
@@ -47,14 +59,27 @@ class _RutinaPageState extends State<RutinaPage> {
   bool vi = false;
   bool sa = false;
   bool dom = false;
-
   bool bandera=true;
   String boton="Guardar";
   int opcionColor=1;
+
+  //Variables para las actualizaciones
   late Actividad actividad0;
-  late Dia dia0;
+
+  // variables para el focusnode, que nos permite manejar el foco de los campos
+  FocusNode titulo = FocusNode();
+  FocusNode nivel = FocusNode();
+  List<FocusNode> focusNodes = [];
+  List<FocusNode> notasNodes = [];
+
+  // Variables para el contador del texto en cada campo
+  int contador = 1;
+
+  //Variables para los detalles de las notas
   List<Detalle> detalles = [];
   List<Nota> notas = [];
+ 
+  late Dia dia0;
   bool bandera2 = true;
   bool bandera3 = true;
 
@@ -63,13 +88,13 @@ class _RutinaPageState extends State<RutinaPage> {
     super.initState();
   }
 
-  @override
-  void didChangeDependencies() {
-    final name = ModalRoute.of(context)?.settings.arguments;
-    id = int.parse(name.toString());
-      //if (id != 0) {id++;}else{id--;};
-    super.didChangeDependencies();
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   final name = ModalRoute.of(context)?.settings.arguments;
+  //   id = int.parse(name.toString());
+  //     //if (id != 0) {id++;}else{id--;};
+  //   super.didChangeDependencies();
+  // }
 
   @override
   Widget build(BuildContext context) {

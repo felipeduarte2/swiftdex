@@ -15,15 +15,25 @@ class ViajePage extends StatefulWidget {
 class _ViajePageState extends State<ViajePage> {
   final _formKey = GlobalKey<FormState>();
 
+
+  // obejeto pra la clase SpeechToText y el bool para el estado del microndelfo
   bool isListening = false;
   SpeechToText  speechRecognizer = SpeechToText();
+
+  // Variable para el id de la tarea a editar o null si es nueva|
   int id = 0;
+
+  //Controller para el titulo
   final _tituloController = TextEditingController();
+
+  //Variables para los datos del viaje
   String _hora = "00:00";
   String nivelDeImportancia = "Normal";
   bool bandera=true;
   String boton="Guardar";
   int opcionColor=1;
+
+  //Variables para las actualizaciones
   late Actividad actividad0;
 
   @override
@@ -31,12 +41,12 @@ class _ViajePageState extends State<ViajePage> {
     super.initState();
   }
 
-  @override
-  void didChangeDependencies() {
-    final name = ModalRoute.of(context)?.settings.arguments;
-    id = int.parse(name.toString());
-    super.didChangeDependencies();
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   final name = ModalRoute.of(context)?.settings.arguments;
+  //   id = int.parse(name.toString());
+  //   super.didChangeDependencies();
+  // }
 
   @override
   Widget build(BuildContext context) {

@@ -16,21 +16,35 @@ class EventoPage extends StatefulWidget {
 class _EventoPageState extends State<EventoPage> {
   final _formKey = GlobalKey<FormState>();
 
+  // Listas de string para  las notas
   final List<String> _taskNotas = [];
+
+  // Listas de controladores para  las notas
   List<TextEditingController> notasControllers = [];
+
+  
+  // obejeto pra la clase SpeechToText y el bool para el estado del microndelfo
   bool isListening = false;
   SpeechToText  speechRecognizer = SpeechToText();
+
+  // Variable para el id de la tarea a editar o null si es nueva
   int id = 0;
+
+  //Variables para los datos del evento
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
-  final _tituloController = TextEditingController();
-  final _lugarController = TextEditingController();
   String _fecha = "0000/00/00";
   String _hora = "00:00";
   String nivelDeImportancia = "Normal";
   bool bandera=true;
   String boton="Guardar";
   int opcionColor=1;
+
+  //Controller para el titulo y el lugar
+  final _tituloController = TextEditingController();
+  final _lugarController = TextEditingController();  
+
+  //Variables para las actualizaciones
   late Actividad actividad0;
   List<Nota> notas = [];
   bool bandera2 = true;
@@ -41,12 +55,12 @@ class _EventoPageState extends State<EventoPage> {
     super.initState();
   }
 
-  @override
-  void didChangeDependencies() {
-    final name = ModalRoute.of(context)?.settings.arguments;
-    id = int.parse(name.toString());
-    super.didChangeDependencies();
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   final name = ModalRoute.of(context)?.settings.arguments;
+  //   id = int.parse(name.toString());
+  //   super.didChangeDependencies();
+  // }
 
   @override
   Widget build(BuildContext context) {
