@@ -98,106 +98,142 @@ class _RutinaPageState extends State<RutinaPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    //obetner el id de la tarea a editar si es que hay alguna
     final name = ModalRoute.of(context)?.settings.arguments;
     id = int.parse(name.toString());
+
+
     return Scaffold(
+
+      // AppBar
       appBar: AppBar(
-        // backgroundColor: const Color(0xffa37437),
         title: const Text('Agregar Nueva Rutina'),
         centerTitle: true,
         actions: <Widget>[
-           IconButton(icon: const Icon(IconlyLight.tick_square), onPressed: () async {
+
+          // Icono para agregar una nueva tarea o actualiza
+           IconButton(
+            icon: const Icon(IconlyLight.tick_square), 
+           
+           onPressed: () async {
             if (_formKey.currentState!.validate()) {
-                            if(id==0){
-                              int id0 = 0;
-                              String? id2 = '';
-                              SharedPreferences prefs = await SharedPreferences.getInstance();
-                              //prefs.setString('ID', id);
-                              id2 = prefs.getString('ID');
-                              id0 = int.parse(id2!);
-                              id0++;
-                              prefs.setString('ID', '$id0');
-                              Actividad actividad = Actividad(
-                                idActividad: id0,
-                                categoria: "Rutina",
-                                titulo:_tituloController.text,
-                                nivelDeImportancia: nivelDeImportancia,
-                                realizado: "no",
-                                fecha: "2000-00-00",
-                                hora: "00:00",
-                                lugar:"" "sin lugar",
-                                horario1: _hora1,
-                                horario2: _hora2,
-                                color: opcionColor,
-                              );
-                              await ActividadesCRUD().insertActividad(actividad);
-                              for (TextEditingController controller in textControllers) {
-                                Detalle detalle =  Detalle(
-                                  detalle: controller.text,
-                                  realizado: "no",
-                                  idActividad: id0,
-                                );
-                                if(controller.text.isNotEmpty){await DetallesCRUD().insertDetalle(detalle);}
-                              }
-                              Dia dia = Dia(
-                                idActividad: id0,
-                                lunes: lunes,
-                                martes: martes,
-                                miercoles: miercoles,
-                                jueves: jueves,
-                                viernes: viernes,
-                                sabado: sabado,
-                                domingo: domingo,
-                              );
-                              await DiasCRUD().insertDia(dia);
-                              for (TextEditingController controller in notasControllers) {
-                                Nota  nota = Nota(
-                                  nota: controller.text,
-                                  idActividad: id0,
-                                );
-                                if(controller.text.isNotEmpty){await NotasCRUD().insertNota(nota);}
-                              }
-                            }
-                            else{
-                              actividad0.titulo=_tituloController.text;
-                              actividad0.nivelDeImportancia=nivelDeImportancia;
-                              actividad0.horario1=_hora1;
-                              actividad0.horario2=_hora2;
-                              actividad0.color=opcionColor;
-                              dia0.lunes=lunes;
-                              dia0.martes=martes;
-                              dia0.miercoles=miercoles;
-                              dia0.jueves=jueves;
-                              dia0.viernes=viernes;
-                              dia0.sabado=sabado;
-                              dia0.domingo=domingo;
-                              await ActividadesCRUD().updateActividad(actividad0);
-                              await DiasCRUD().updateDia(dia0);
-                              DetallesCRUD().deleteDetalle(id);
-                              for (TextEditingController controller in textControllers) {
-                                Detalle detalle =  Detalle(
-                                  detalle: controller.text,
-                                  realizado: "no",
-                                  idActividad: id,
-                                );
-                                if(controller.text.isNotEmpty){await DetallesCRUD().insertDetalle(detalle);}
-                              }
-                              NotasCRUD().deleteNota(id);
-                              for (TextEditingController controller in notasControllers) {
-                                Nota  nota = Nota(
-                                  nota: controller.text,
-                                  idActividad: id,
-                                );
-                                if(controller.text.isNotEmpty){await NotasCRUD().insertNota(nota);}
-                              }
-                            }
-                            // ignore: use_build_context_synchronously
-                            Navigator.pop(context);
-                          }
+
+                if(id==0){
+                  int id0 = 0;
+                  String? id2 = '';
+                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                  //prefs.setString('ID', id);
+                  id2 = prefs.getString('ID');
+                  id0 = int.parse(id2!);
+                  id0++;
+                  prefs.setString('ID', '$id0');
+
+                  // Insertar nueva tarea
+                  Actividad actividad = Actividad(
+                    idActividad: id0,
+                    categoria: "Rutina",
+                    titulo:_tituloController.text,
+                    nivelDeImportancia: nivelDeImportancia,
+                    realizado: "no",
+                    fecha: "2000-00-00",
+                    hora: "00:00",
+                    lugar:"" "sin lugar",
+                    horario1: _hora1,
+                    horario2: _hora2,
+                    color: opcionColor,
+                  );
+
+
+                  await ActividadesCRUD().insertActividad(actividad);
+
+
+                  for (TextEditingController controller in textControllers) {
+                    Detalle detalle =  Detalle(
+                      detalle: controller.text,
+                      realizado: "no",
+                      idActividad: id0,
+                    );
+                    if(controller.text.isNotEmpty){await DetallesCRUD().insertDetalle(detalle);}
+                  }
+
+
+                  Dia dia = Dia(
+                    idActividad: id0,
+                    lunes: lunes,
+                    martes: martes,
+                    miercoles: miercoles,
+                    jueves: jueves,
+                    viernes: viernes,
+                    sabado: sabado,
+                    domingo: domingo,
+                  );
+
+
+
+                  await DiasCRUD().insertDia(dia);
+                  for (TextEditingController controller in notasControllers) {
+                    Nota  nota = Nota(
+                      nota: controller.text,
+                      idActividad: id0,
+                    );
+                    if(controller.text.isNotEmpty){await NotasCRUD().insertNota(nota);}
+                  }
+
+
+                }
+
+
+                else{
+                  actividad0.titulo=_tituloController.text;
+                  actividad0.nivelDeImportancia=nivelDeImportancia;
+                  actividad0.horario1=_hora1;
+                  actividad0.horario2=_hora2;
+                  actividad0.color=opcionColor;
+                  dia0.lunes=lunes;
+                  dia0.martes=martes;
+                  dia0.miercoles=miercoles;
+                  dia0.jueves=jueves;
+                  dia0.viernes=viernes;
+                  dia0.sabado=sabado;
+                  dia0.domingo=domingo;
+
+
+                  await ActividadesCRUD().updateActividad(actividad0);
+
+                  await DiasCRUD().updateDia(dia0);
+
+                  DetallesCRUD().deleteDetalle(id);
+
+                  for (TextEditingController controller in textControllers) {
+                    Detalle detalle =  Detalle(
+                      detalle: controller.text,
+                      realizado: "no",
+                      idActividad: id,
+                    );
+                    if(controller.text.isNotEmpty){await DetallesCRUD().insertDetalle(detalle);}
+                  }
+
+                  NotasCRUD().deleteNota(id);
+                  for (TextEditingController controller in notasControllers) {
+                    Nota  nota = Nota(
+                      nota: controller.text,
+                      idActividad: id,
+                    );
+                    if(controller.text.isNotEmpty){await NotasCRUD().insertNota(nota);}
+                  }
+
+                }
+                // ignore: use_build_context_synchronously
+                Navigator.pop(context);
+              }
            }),
         ],
       ),
+
+
       body: _showActividad(context),
+
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: AvatarGlow(
         glowRadiusFactor: 4.0,
@@ -206,6 +242,8 @@ class _RutinaPageState extends State<RutinaPage> {
         glowColor: Colors.blue,
         repeat: true,
         child: GestureDetector(
+
+
           onTapDown: (details) async {
             if(!isListening){
               bool available = await speechRecognizer.initialize();
@@ -222,21 +260,28 @@ class _RutinaPageState extends State<RutinaPage> {
               }
             }
           },
+
           onTapUp: (details) {
             setState(() {
               isListening = false;
             });
             speechRecognizer.stop();
           },
+
+
           child: CircleAvatar(
             backgroundColor: Colors.blue,
             radius: 30,
             child: Icon(!isListening ? Icons.mic : Icons.stop,color: Colors.white,),
-            ),
+          ),
+
+
         ),
       ),
     );
   }
+
+
   @override
   void dispose() {
     _tituloController.dispose();
@@ -246,8 +291,6 @@ class _RutinaPageState extends State<RutinaPage> {
     for (TextEditingController controller in notasControllers) {
       controller.dispose();
     }
-    // _detallesController.dispose();
-    // _notasController.dispose();
     super.dispose();
   }
 
@@ -258,10 +301,8 @@ class _RutinaPageState extends State<RutinaPage> {
     Actividad? actividad = await ActividadesCRUD().getActividadById(id);
     List<Detalle> detalle2 = await DetallesCRUD().getAllDetallesById(id);
     List<Nota> nota2 = await  NotasCRUD().getAllNotasById(id);
-
-    // Detalle? detalle  = await DetallesCRUD().getDetalleById(id);
     Dia? dia = await DiasCRUD().getDiaById(id);
-    // Nota? nota = await NotasCRUD().getNotaById(id);
+
     if(mounted){
       setState(() {
         actividad0 = actividad!;
@@ -287,30 +328,45 @@ class _RutinaPageState extends State<RutinaPage> {
     }
   }
 
-  _subtareas(BuildContext context) {
+  Container _subtareas(BuildContext context) {
+
     if(id==0){
-    for (int i = 0; i < _taskList.length + 1; i++) {
-      TextEditingController textController = TextEditingController();
-      textControllers.add(textController);
+
+
+    if(_taskList.isEmpty){
+      for (int i = 0; i < _taskList.length + 1; i++) {
+        TextEditingController textController = TextEditingController();
+        textControllers.add(textController);
+      }
+      focusNodes = List<FocusNode>.generate(_taskList.length + 1, (index) =>  FocusNode());
     }
+
     return Container(
+
+
       decoration: const BoxDecoration(
-                          // color: Color(0xff63d3ff),
-                          borderRadius:  BorderRadius.all(Radius.circular(10)), 
-                          border: Border(
-                            bottom: BorderSide(color: Colors.blue),
-                            right: BorderSide(color: Colors.blue),
-                            left: BorderSide(color: Colors.blue),
-                            top: BorderSide(color: Colors.blue),
-                          ),
-                        ),
+        // color: Color(0xff63d3ff),
+        borderRadius:  BorderRadius.all(Radius.circular(10)), 
+        border: Border(
+          bottom: BorderSide(color: Colors.blue),
+          right: BorderSide(color: Colors.blue),
+          left: BorderSide(color: Colors.blue),
+          top: BorderSide(color: Colors.blue),
+        ),
+      ),
+
+
       child: Column(      
         children: [
           const Text('Detalles',style: TextStyle(fontSize: 18) ),
+
+
           for (int i = 0; i < _taskList.length+ 1; i++) ...[
+
             ListTile(
               title: Row(
                 children: [
+
                   Expanded(
                     child: TextFormField(
                       controller: textControllers[i],
@@ -320,6 +376,7 @@ class _RutinaPageState extends State<RutinaPage> {
                       ),
                     ),
                   ),
+
                   IconButton(
                     // ignore: prefer_const_constructors
                     icon: i == _taskList.length ?  Icon(IconlyLight.plus) : Icon(IconlyLight.close_square),
@@ -337,6 +394,7 @@ class _RutinaPageState extends State<RutinaPage> {
                       }                  
                     },
                   )
+                  
                 ],
               ),
             ),
@@ -345,27 +403,34 @@ class _RutinaPageState extends State<RutinaPage> {
       ),
     );}
     else{
-      if(bandera2){
-      for (int i = 0; i < detalles.length +1; i++){
-        TextEditingController textController = TextEditingController();
-        if(i != detalles.length){_taskList.add(''); textController.text=detalles[i].detalle;}
-        textControllers.add(textController);
+
+      if(_taskList.isEmpty && bandera2 == true){
+        for (int i = 0; i < detalles.length +1; i++){
+          TextEditingController textController = TextEditingController();
+          if(i != detalles.length){_taskList.add(''); textController.text=detalles[i].detalle;}
+          textControllers.add(textController);
+        }
+        focusNodes = List<FocusNode>.generate(_taskList.length + 1, (index) =>  FocusNode());
+        textControllers.removeAt(0);
+        focusNodes.removeAt(0);
+        textControllers.add(TextEditingController());
+        focusNodes.add(FocusNode());
       }
-      textControllers.removeAt(0);
-      TextEditingController textController = TextEditingController();
-      textControllers.add(textController);
-      }
+
+
     return Container(
       decoration: const BoxDecoration(
-                          // color: Color(0xff63d3ff),
-                          borderRadius:  BorderRadius.all(Radius.circular(10)), 
-                          border: Border(
-                            bottom: BorderSide(color: Colors.blue),
-                            right: BorderSide(color: Colors.blue),
-                            left: BorderSide(color: Colors.blue),
-                            top: BorderSide(color: Colors.blue),
-                          ),
-                        ),
+        // color: Color(0xff63d3ff),
+        borderRadius:  BorderRadius.all(Radius.circular(10)), 
+        border: Border(
+          bottom: BorderSide(color: Colors.blue),
+          right: BorderSide(color: Colors.blue),
+          left: BorderSide(color: Colors.blue),
+          top: BorderSide(color: Colors.blue),
+        ),
+      ),
+
+
       child: Column(      
         children: [
           const Text('Subtareas',style: TextStyle(fontSize: 18) ),
@@ -397,6 +462,7 @@ class _RutinaPageState extends State<RutinaPage> {
                           bandera2=false;bandera3=false;
                           _taskList.remove(_taskList[i]);
                           textControllers.removeAt(i);
+                          bandera2 = false;
                         });
                       }                  
                     },
@@ -411,30 +477,44 @@ class _RutinaPageState extends State<RutinaPage> {
     }
   }
 
-  _notas(BuildContext context){
+  Container _notas(BuildContext context){
     if(id==0){
+
+
+      if(_taskNotas.isEmpty){
         for (int i = 0; i < _taskNotas.length + 1; i++) {
-      TextEditingController notasController = TextEditingController();
-      notasControllers.add(notasController);
-    }
+          TextEditingController notasController = TextEditingController();
+          notasControllers.add(notasController);
+        }
+        notasNodes = List<FocusNode>.generate(_taskNotas.length + 1, (index) =>  FocusNode());
+      }
+
+
     return Container(
       decoration: const BoxDecoration(
-                          // color: Color(0xff63d3ff),
-                          borderRadius:  BorderRadius.all(Radius.circular(10)), 
-                          border: Border(
-                            bottom: BorderSide(color: Colors.blue),
-                            right: BorderSide(color: Colors.blue),
-                            left: BorderSide(color: Colors.blue),
-                            top: BorderSide(color: Colors.blue),
-                          ),
-                        ),
+        // color: Color(0xff63d3ff),
+        borderRadius:  BorderRadius.all(Radius.circular(10)), 
+        border: Border(
+          bottom: BorderSide(color: Colors.blue),
+          right: BorderSide(color: Colors.blue),
+          left: BorderSide(color: Colors.blue),
+          top: BorderSide(color: Colors.blue),
+        ),
+      ),
+
+
       child: Column(      
         children: [
+
           const Text('Notas',style: TextStyle(fontSize: 18) ),
+
+
           for (int i = 0; i < _taskNotas.length+ 1; i++) ...[
             ListTile(
               title: Row(
                 children: [
+
+
                   Expanded(
                     child: TextFormField(
                       controller: notasControllers[i],
@@ -444,6 +524,8 @@ class _RutinaPageState extends State<RutinaPage> {
                       ),
                     ),
                   ),
+
+
                   IconButton(
                     // ignore: prefer_const_constructors
                     icon: i == _taskNotas.length ? Icon(IconlyLight.plus) : Icon(IconlyLight.close_square),
@@ -468,35 +550,46 @@ class _RutinaPageState extends State<RutinaPage> {
         ],
       ),
     );}
+
     else{
-      if(bandera3){
-      for (int i = 0; i < notas.length +1; i++){
-        TextEditingController notasController = TextEditingController();
-        if(i != notas.length){_taskNotas.add(''); notasController.text=notas[i].nota;}
-        notasControllers.add(notasController);
+
+      if(_taskNotas.isEmpty && bandera3 == true){
+        for (int i = 0; i < notas.length +1; i++){
+          TextEditingController notasController = TextEditingController();
+          if(i != notas.length){_taskNotas.add(''); notasController.text=notas[i].nota;}
+          notasControllers.add(notasController);
+        }
+        notasNodes = List<FocusNode>.generate(_taskNotas.length + 1, (index) =>  FocusNode());
+        notasControllers.removeAt(0);
+        notasControllers.add(TextEditingController());
       }
-      notasControllers.removeAt(0);
-      TextEditingController notasController = TextEditingController();
-      notasControllers.add(notasController);
-      }
+
+
       return Container(
+
+
       decoration: const BoxDecoration(
-                          // color: Color(0xff63d3ff),
-                          borderRadius:  BorderRadius.all(Radius.circular(10)), 
-                          border: Border(
-                            bottom: BorderSide(color: Colors.blue),
-                            right: BorderSide(color: Colors.blue),
-                            left: BorderSide(color: Colors.blue),
-                            top: BorderSide(color: Colors.blue),
-                          ),
-                        ),
+        borderRadius:  BorderRadius.all(Radius.circular(10)), 
+        border: Border(
+          bottom: BorderSide(color: Colors.blue),
+          right: BorderSide(color: Colors.blue),
+          left: BorderSide(color: Colors.blue),
+          top: BorderSide(color: Colors.blue),
+        ),
+      ),
+
+
       child: Column(      
         children: [
+
           const Text('Notas',style: TextStyle(fontSize: 18) ),
+
           for (int i = 0; i < _taskNotas.length+ 1; i++) ...[
             ListTile(
               title: Row(
                 children: [
+
+
                   Expanded(
                     child: TextFormField(
                       controller: notasControllers[i],
@@ -506,6 +599,8 @@ class _RutinaPageState extends State<RutinaPage> {
                       ),
                     ),
                   ),
+
+
                   IconButton(
                     // ignore: prefer_const_constructors
                     icon: i == _taskNotas.length ? Icon(IconlyLight.plus) : Icon(IconlyLight.close_square),
@@ -525,6 +620,8 @@ class _RutinaPageState extends State<RutinaPage> {
                       }
                     },
                   )
+
+
                 ],
               ),
             ),
@@ -536,11 +633,15 @@ class _RutinaPageState extends State<RutinaPage> {
   }
 
   _showActividad(BuildContext context) {
+
       if (id != 0){
         if(bandera){
           _loadActividad();
         }
       }
+
+      
+
       return SingleChildScrollView(
         child: Column(
           children: [

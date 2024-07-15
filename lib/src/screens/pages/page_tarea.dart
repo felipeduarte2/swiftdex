@@ -198,6 +198,8 @@ class _TareaPageState extends State<TareaPage> {
         glowColor: Colors.blue,
         repeat: true,
         child: GestureDetector(
+
+
           onTapDown: (details) async {
             if(!isListening){
               bool available = await speechRecognizer.initialize();
@@ -226,12 +228,16 @@ class _TareaPageState extends State<TareaPage> {
               }
             }
           },
+
+          
           onTapUp: (details) {
             setState(() {
               isListening = false;
             });
             speechRecognizer.stop();
           },
+
+
           child: CircleAvatar(
             backgroundColor: Colors.blue,
             radius: 30,
@@ -547,8 +553,6 @@ class _TareaPageState extends State<TareaPage> {
         notasNodes = List<FocusNode>.generate(_taskNotas.length + 1, (index) =>  FocusNode());
         notasControllers.removeAt(0);
         notasControllers.add(TextEditingController());
-        // notasNodes.removeAt(0);
-        // notasNodes.add(FocusNode());
       }
 
 
