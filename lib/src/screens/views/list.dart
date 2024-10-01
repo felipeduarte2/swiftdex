@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:iconly/iconly.dart';
 import 'package:listgenius/src/screens/data_base/crud_actividades.dart';
-//import 'package:listgenius/src/screens/temas/mySearchDelegate.dart';
 import 'package:listgenius/src/screens/temas/removeact.dart';
 import 'package:listgenius/src/screens/temas/taskitem.dart';
 
@@ -14,22 +12,26 @@ class ListViewPage extends StatefulWidget {
 }
 
 class _ListViewPageState extends State<ListViewPage> {
+
+  // lista de actividades
   List<Actividad>? _actividades;
-  // List<Actividad>? _filteredActividades;
-  late List<Actividad> _filteredActividades;
+
+  //
   List<bool>? boolList;
-  // final _searchQuery = TextEditingController();
+
+
   @override
   void initState() {
     super.initState();
     _loadActividades();
-    _filteredActividades = [];
   }
+
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
   }
+
 
   Future<void> _loadActividades() async {
     List<Actividad>? actividades = await ActividadesCRUD().getAllActividades();
@@ -41,18 +43,23 @@ class _ListViewPageState extends State<ListViewPage> {
     }
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
+      //
       body: _actividades != null
           ? _showActividades(context)
           : _buttonCircular(context),
+
+      //
       floatingActionButton: FloatingActionButton(
-        onPressed: (){
-        _ShowDialog(context);
-        },
+        onPressed: (){ _ShowDialog(context); },
         child: const Icon(Icons.add,color: Colors.white),
       ),
+
     );
   }
 
@@ -61,10 +68,40 @@ class _ListViewPageState extends State<ListViewPage> {
   }
 
   _showActividades(BuildContext context){
+
+    // cargar las actividades
     _loadActividades();
+
+    // si las actividades estan vacias mostrar un texto en el centro 'Sin Actividades'
     if(_actividades!.isEmpty){
-      return const Center(child: Text("Sin Actividades",style: TextStyle(fontSize: 18)));
-    }else{
+      return Center(
+        child: Column(
+          children: [
+
+
+            // mostrar una imagen de formato svg
+            //SvgPicture.asset('assets/images/empty.svg'),
+            Container(
+              margin: const EdgeInsets.only(right: 60, left: 60, top: 60),
+              child: const SizedBox(
+                child: Image(image: AssetImage('assets/images/empty.png'))
+              ),
+            ),
+            
+            
+            // un size box para dividir
+            const SizedBox(height: 20),
+            const Text(
+              "Sin Actividades",
+              style: TextStyle(fontSize: 25, fontWeight: FontWeight.w400)
+            ),
+
+          ],
+        )
+      );
+    }
+
+    else{
       return Column(
         children: [
           Container(
@@ -121,48 +158,37 @@ class _ListViewPageState extends State<ListViewPage> {
       context: context, 
       builder: (BuildContext context){
         return SimpleDialog(
-          // title: const Text(
-          //   'SELECCIONE UNA OPCIÓN',
-          //   textAlign: TextAlign.center,
-          //   style: TextStyle(fontWeight: FontWeight.bold)
-          // ),
-          // alignment:  Alignment.center,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.all(25.0),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                // mainAxisAlignment: MainAxisAlignment.center,
+                // crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
                       GestureDetector(
-                        onTap: () => {
-                          _irTarea(context),
-                        },
+                        onTap: () => {_irTarea(context),},
                         child: Container(
                           decoration: const BoxDecoration(
                             color: Color(0xff63d3ff),
                             borderRadius: BorderRadius.all(Radius.circular(10)), 
                           ),
-                          // height: 50,
                           padding: const EdgeInsets.all(8.0,),
                           child: const Column(
                             children: <Widget>[
-                              Icon(Icons.assignment, size: 90,color: Colors.black87,),
-                              Text("TAREA",style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color: Colors.black87 )
+                              Icon(Icons.assignment, size: 70,color: Colors.black54,),
+                              Text("Tarea",style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold, color: Colors.black54 )
                               ),
                             ],
                           ),
                         ),
                       ),
-                      const SizedBox(width: 10),
+                      // const SizedBox(width: 5),
                       GestureDetector(
-                        onTap: () => {
-                          _irEvento(context),
-                        },
+                        onTap: () => {_irEvento(context),},
                         child: Container(
                           decoration: const BoxDecoration(
                             color: Color(0xff63d3ff),
@@ -171,8 +197,8 @@ class _ListViewPageState extends State<ListViewPage> {
                           padding: const EdgeInsets.all(8.0),
                           child: const Column(
                             children: <Widget>[
-                              Icon(Icons.event, size: 90,color: Colors.black87),
-                              Text("EVENTO", style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color: Colors.black87)
+                              Icon(Icons.event, size: 70,color: Colors.black54),
+                              Text("Evento", style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color: Colors.black54)
                               ),
                             ],
                           ),
@@ -180,14 +206,12 @@ class _ListViewPageState extends State<ListViewPage> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 15),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
                       GestureDetector(
-                        onTap: () => {
-                          _irRutina(context),
-                        },
+                        onTap: () => {_irRutina(context),},
                         child: Container(
                           decoration: const BoxDecoration(
                             color: Color(0xff63d3ff),
@@ -196,18 +220,16 @@ class _ListViewPageState extends State<ListViewPage> {
                           padding: const EdgeInsets.all(8.0),
                           child: const Column(
                             children: <Widget>[
-                              Icon(Icons.directions_run, size: 90,color: Colors.black87),
-                              Text("RUTINA", style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color: Colors.black87)
+                              Icon(Icons.directions_run, size: 70,color: Colors.black54),
+                              Text("Rutina", style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color: Colors.black54)
                               ),
                             ],
                           ),
                         ),
                       ),
-                      const SizedBox(width: 10),
+                      // const SizedBox(width: 5),
                       GestureDetector(
-                        onTap: () => {
-                          _irViaje(context),
-                        },
+                        onTap: () => {_irViaje(context),},
                         child: Container(
                           decoration: const BoxDecoration(
                             color: Color(0xff63d3ff),
@@ -216,8 +238,8 @@ class _ListViewPageState extends State<ListViewPage> {
                           padding: const EdgeInsets.all(10.0),
                           child: const Column(
                             children: <Widget>[
-                              Icon(Icons.note_alt_outlined, size: 90,color: Colors.black87),
-                              Text("Nota",style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color: Colors.black87)),
+                              Icon(Icons.note_alt_outlined, size: 70,color: Colors.black54),
+                              Text("Nota",style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color: Colors.black54)),
                             ],
                           ),
                         ),
@@ -255,14 +277,14 @@ class _ListViewPageState extends State<ListViewPage> {
     Navigator.of(context).pushNamed("/evento",arguments: "0");
   }
   
-  _buscarActividad(String value) {
-    if(value.isEmpty){
-      _filteredActividades = _actividades!;
-    }else{
-      //_filteredActividades = _actividades!.where((element) => false)
-      //.where((Actividad) => Actividad["titulo"].toLowerCase().contains(value.toLowerCase().toList()));
-    }
-  }
+  // _buscarActividad(String value) {
+  //   if(value.isEmpty){
+  //     _filteredActividades = _actividades!;
+  //   }else{
+  //     //_filteredActividades = _actividades!.where((element) => false)
+  //     //.where((Actividad) => Actividad["titulo"].toLowerCase().contains(value.toLowerCase().toList()));
+  //   }
+  // }
 
   // void _filterActividades(String query) {
   //   List<Actividad>? results = [];

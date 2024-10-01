@@ -17,14 +17,22 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+
+      // Desactiva el baner de dedug
       debugShowCheckedModeBanner: false,
-      title: 'Bottom Navigation Bar Example',
+
+      // titulo
+      title: 'List Genius',
+
+      // carga los temas desde la clase Temas
       theme: Temas.lightTema,
+
+      // carga los temas oscuros desde la clase Temas
       darkTheme: Temas.dartTema,
-      //home: MyHomePage(),
+
+      // todas la rutas de la aplicación
       routes: {
         "/":(BuildContext builder)=> const MyHomePage(),
-        // "/second":(BuildContext builder)=> Secon_Page(),
         "/evento":(BuildContext builder)=> const EventoPage(),
         "/rutina":(BuildContext builder)=> const RutinaPage(),
         "/tarea":(BuildContext builder)=> const TareaPage(),

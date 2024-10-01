@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconly/iconly.dart';
 import 'package:listgenius/src/screens/views/calendar.dart';
-import 'package:listgenius/src/screens/views/controlador.dart';
+import 'package:listgenius/src/screens/controllers/controlador.dart';
 import 'package:listgenius/src/screens/views/list.dart';
 import 'package:listgenius/src/screens/views/usser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,6 +17,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+  // controlador del botton de navegación
   final MainWraoperController controller = Get.put(MainWraoperController());
 
   @override
@@ -42,11 +44,15 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
 
+      // appBar
       appBar: AppBar(
         title: const Text("SwiftDex", style: TextStyle(fontSize: 20,)),
         centerTitle: true,
       ),
 
+
+
+      // cuerpo
       body: PageView(
         onPageChanged: controller.animateTopTap,
         controller: controller.pageControler,
@@ -58,26 +64,30 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
 
+
+
+      // botones de navegación
       bottomNavigationBar: BottomAppBar(
         notchMargin: 10,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-          child: Obx(
-            ()=> Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _bottomAppBarIten(context, icon: IconlyLight.document, page: 0, label: "LISTA"),
-                _bottomAppBarIten(context, icon: IconlyLight.calendar, page: 1, label: "CALENDARIO"),
-                _bottomAppBarIten(context, icon: IconlyLight.profile, page: 2, label: "USUARIO"),
-              ],
-            ),
+        child: Obx(
+          ()=> Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _bottomAppBarIten(context, icon: IconlyLight.document, page: 0),
+              _bottomAppBarIten(context, icon: IconlyLight.calendar, page: 1),
+              _bottomAppBarIten(context, icon: IconlyLight.profile, page: 2),
+            ],
           ),
         ),
       ),
     );
   }
 
-  Widget _bottomAppBarIten(BuildContext context,{required icon, required page, required label}){
+
+
+
+  //
+  Widget _bottomAppBarIten(BuildContext context,{required icon, required page}){
     return ZoomTapAnimation(
       onTap: () => controller.goToTap(page),
       child: Column(
@@ -85,11 +95,9 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           Icon(
             icon,
-            color: controller.currentPage.value == page ? Colors.blue : Colors.blue[200],
+            size: 32,
+            color: controller.currentPage.value == page ? Colors.blue : Colors.blue[400],
           ),
-          Text(
-            label,
-            style: TextStyle(color: controller.currentPage.value == page ? Colors.blue : Colors.blue[200],),)
         ],
       ),
     );
