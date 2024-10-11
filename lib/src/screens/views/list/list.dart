@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
 import 'package:listgenius/src/screens/data_base/crud_actividades.dart';
 import 'package:listgenius/src/screens/temas/removeact.dart';
-import 'package:listgenius/src/screens/temas/taskitem.dart';
+import 'package:listgenius/src/screens/views/list/components/taskitem.dart';
 
 class ListViewPage extends StatefulWidget {
   const ListViewPage({super.key});
