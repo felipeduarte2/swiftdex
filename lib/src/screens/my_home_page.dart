@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:iconly/iconly.dart';
 import 'package:listgenius/src/screens/views/calendar.dart';
 import 'package:listgenius/src/screens/controllers/controlador.dart';
-import 'package:listgenius/src/screens/views/list.dart';
+import 'package:listgenius/src/screens/views/list/list.dart';
 import 'package:listgenius/src/screens/views/usser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
