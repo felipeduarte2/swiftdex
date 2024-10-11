@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
 import 'package:listgenius/src/screens/data_base/crud_actividades.dart';
 import 'package:listgenius/src/screens/temas/removeact.dart';
+import 'package:listgenius/src/screens/views/list/components/sin_tareas.dart';
 import 'package:listgenius/src/screens/views/list/components/taskitem.dart';
 
 class ListViewPage extends StatefulWidget {
@@ -19,47 +20,34 @@ class _ListViewPageState extends State<ListViewPage> {
   //
   List<bool>? boolList;
 
-
   @override
   void initState() {
     super.initState();
     _loadActividades();
   }
 
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
   }
 
-
   Future<void> _loadActividades() async {
     List<Actividad>? actividades = await ActividadesCRUD().getAllActividades();
     boolList= List<bool>.generate(actividades.length, (index) => false);
-    if(mounted){
-      setState(() {
-      _actividades = actividades;
-    });
+    if(mounted){setState(() {_actividades = actividades;});
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-      //
       body: _actividades != null
           ? _showActividades(context)
           : _buttonCircular(context),
-
-      //
       floatingActionButton: FloatingActionButton(
         onPressed: (){ _ShowDialog(context); },
         child: const Icon(Icons.add,color: Colors.white),
       ),
-
     );
   }
 
@@ -68,51 +56,26 @@ class _ListViewPageState extends State<ListViewPage> {
   }
 
   _showActividades(BuildContext context){
-
     // cargar las actividades
     _loadActividades();
 
-    // si las actividades estan vacias mostrar un texto en el centro 'Sin Actividades'
+    // si las actividades estan vacias
+    // mostrar un texto en el centro 'Sin Actividades'
     if(_actividades!.isEmpty){
-      return Center(
-        child: Column(
-          children: [
-
-
-            // mostrar una imagen de formato svg
-            //SvgPicture.asset('assets/images/empty.svg'),
-            Container(
-              margin: const EdgeInsets.only(right: 60, left: 60, top: 60),
-              child: const SizedBox(
-                child: Image(image: AssetImage('assets/images/empty.png'))
-              ),
-            ),
-            
-            
-            // un size box para dividir
-            const SizedBox(height: 20),
-            const Text(
-              "Sin Actividades",
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.w400)
-            ),
-
-          ],
-        )
-      );
+      notActiviti(context);
     }
-
     else{
       return Column(
         children: [
-          Container(
-            margin: const EdgeInsets.only(top: 5, bottom: 5, right: 20,left: 20),
-            child: const TextField(
-              //onChanged: (value) => _buscarActividad(value),
-              decoration: InputDecoration(
-                labelText: "Busqueda", suffixIcon: Icon(IconlyLight.search)
-              ),
-            ),
-          ),
+          // Container(
+          //   margin: const EdgeInsets.only(top: 5, bottom: 5, right: 20,left: 20),
+          //   child: const TextField(
+          //     //onChanged: (value) => _buscarActividad(value),
+          //     decoration: InputDecoration(
+          //       labelText: "Busqueda", suffixIcon: Icon(IconlyLight.search)
+          //     ),
+          //   ),
+          // ),
           Expanded(
             child: ListView.builder(
                     itemCount: _actividades!.length,
@@ -276,28 +239,4 @@ class _ListViewPageState extends State<ListViewPage> {
     Navigator.pop(context);
     Navigator.of(context).pushNamed("/evento",arguments: "0");
   }
-  
-  // _buscarActividad(String value) {
-  //   if(value.isEmpty){
-  //     _filteredActividades = _actividades!;
-  //   }else{
-  //     //_filteredActividades = _actividades!.where((element) => false)
-  //     //.where((Actividad) => Actividad["titulo"].toLowerCase().contains(value.toLowerCase().toList()));
-  //   }
-  // }
-
-  // void _filterActividades(String query) {
-  //   List<Actividad>? results = [];
-  //   if (query.isEmpty) {
-  //     results = _actividades;
-  //   } else {
-  //     results = _actividades
-  //         ?.where((actividad) =>
-  //             actividad.titulo.toLowerCase().contains(query.toLowerCase()))
-  //         .toList();
-  //   }
-  //   setState(() {
-  //     _filteredActividades = results!;
-  //   });
-  // }
 }
