@@ -5,11 +5,12 @@ import 'package:listgenius/src/screens/pages/page_rutina.dart';
 import 'package:listgenius/src/screens/pages/page_tarea.dart';
 import 'package:listgenius/src/screens/pages/page_viaje.dart';
 import 'package:listgenius/src/screens/temas/temas.dart';
-import 'package:listgenius/src/screens/views/login_screen.dart';
+//import 'package:listgenius/src/screens/views/login_screen.dart';
 import 'package:listgenius/src/screens/vistas/view_evento.dart';
 import 'package:listgenius/src/screens/vistas/view_rutina.dart';
 import 'package:listgenius/src/screens/vistas/view_tarea.dart';
 import 'package:listgenius/src/screens/vistas/view_viaje.dart';
+import 'package:listgenius/ui/screens/login_screen.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -32,7 +33,8 @@ class MyApp extends StatelessWidget {
 
       // todas la rutas de la aplicación
       routes: {
-        "/":(BuildContext builder)=> const MyHomePage(),
+        '/': (context) => const LoginScreen(),
+        "/principal":(BuildContext builder)=> const MyHomePage(),
         "/evento":(BuildContext builder)=> const EventoPage(),
         "/rutina":(BuildContext builder)=> const RutinaPage(),
         "/tarea":(BuildContext builder)=> const TareaPage(),
@@ -41,7 +43,7 @@ class MyApp extends StatelessWidget {
         "/viewrutina":(BuildContext builder)=> const RutinaDetails(),
         "/viewviaje":(BuildContext builder)=> const ViajeDetails(),
         "/viewtarea":(BuildContext builder)=> const TareaDetails(),
-        "/user_info":(BuildContext builder)=> const LoginScreen(),
+        //"/user_info":(BuildContext builder)=> const LoginScreen(),
       },
     );
   }
