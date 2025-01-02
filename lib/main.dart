@@ -9,5 +9,5 @@ Future<void> main() async {
   await initNotifications();
 
   // 
-  runApp(const MyApp());
+  runApp(MyApp());
 }

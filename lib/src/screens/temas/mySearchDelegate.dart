@@ -4,22 +4,22 @@ import 'package:listgenius/src/screens/data_base/crud_actividades.dart';
 class SearchActivityDelegate extends SearchDelegate<Actividad>{
   @override
   List<Widget>? buildActions(BuildContext context) {
-    return [Center()];
+    return [const Center()];
   }
 
   @override
   Widget? buildLeading(BuildContext context) {
-    return Center();
+    return const Center();
   }
 
   @override
   Widget buildResults(BuildContext context) {
-    return Center();
+    return const Center();
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return Center();
+    return const Center();
   }
 
 }
