@@ -1,8 +1,11 @@
+import 'package:listgenius/services/usuario_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/api_service.dart';
 
 class AuthRepository {
-  final ApiService apiService = ApiService();
+
+  //final ApiService apiService = ApiService();
+  final UsuarioService apiService = UsuarioService(apiService:ApiService());
 
   Future<Map<String, dynamic>> login(String email, String password) async {
     try {
@@ -60,7 +63,7 @@ class AuthRepository {
         return {'success': false, 'error': 'Token no encontrado. Por favor, inicia sesión nuevamente.'};
       }
 
-      final data = await apiService.deleteUser(token, id);
+      final data = await apiService.deleteUser(token);
       if (data['message'] != null) {
         await logout();
         return {'success': true, 'message': 'Usuario eliminado exitosamente'};
